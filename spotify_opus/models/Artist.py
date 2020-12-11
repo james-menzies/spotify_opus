@@ -9,7 +9,7 @@ class Artist(ContextObject):
     __tablename__ = "artists"
     artist_id = db.Column(db.Integer(), ForeignKey(
         "context_objects.context_id"), primary_key=True)
-    name = db.Column(db.String(), nullable=False)
+
 
     __mapper_args__ = {
         "polymorphic_identity": "artist"
