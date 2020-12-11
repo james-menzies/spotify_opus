@@ -30,7 +30,7 @@ def create_app() -> Flask:
     app.register_blueprint(manage_commands)
 
     from spotify_opus.controllers import registerable_controllers
-    from spotify_opus.models import Track, Artist, Album, Work
+    from spotify_opus.models import Track, Artist, Album, Work, SectionName
 
     for controller in registerable_controllers:
         app.register_blueprint(controller)
