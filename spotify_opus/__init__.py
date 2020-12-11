@@ -26,8 +26,8 @@ def create_app() -> Flask:
     jwt.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)
 
-    from spotify_opus.commands import db_commands
-    app.register_blueprint(db_commands)
+    from spotify_opus.manage import manage_commands
+    app.register_blueprint(manage_commands)
 
     from spotify_opus.controllers import registerable_controllers
 

@@ -10,10 +10,10 @@ from sqlalchemy import inspect
 
 from spotify_opus import db
 
-db_commands = Blueprint("manage", "ascribe")
+manage_commands = Blueprint("manage", "ascribe")
 
 
-@db_commands.cli.command("reset")
+@manage_commands.cli.command("reset")
 @click.pass_context
 def reset_db(ctx):
     """This operation will set up a database as if it were """
@@ -24,14 +24,14 @@ def reset_db(ctx):
     print("Defaults added to database.")
 
 
-@db_commands.cli.command("delete")
+@manage_commands.cli.command("delete")
 def delete_db():
     db.drop_all()
     db.engine.execute("DROP TABLE IF EXISTS alembic_version;")
     print("Tables deleted!")
 
 
-@db_commands.cli.command("seed")
+@manage_commands.cli.command("seed")
 @click.option('--reset/--no-reset', default=True)
 @click.pass_context
 def seed_db(ctx, reset):
