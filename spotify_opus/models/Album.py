@@ -1,7 +1,5 @@
 from enum import Enum
 
-from sqlalchemy import ForeignKey
-
 from spotify_opus import db
 from spotify_opus.models.ContextObject import ContextObject
 
@@ -22,4 +20,3 @@ class Album(ContextObject):
     __mapper_args__ = {
         "polymorphic_identity": "album"
     }
-
