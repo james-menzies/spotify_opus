@@ -1,0 +1,37 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches-ignore:
+      - 'master'
+
+jobs:
+  test-suite:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v2
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run tests
+        env:
+          FLASK_ENV: "testing"
+        run: |
+          python -m unittest discover test
+      - name: Check Type Hinting
+        if: ${{ always() }}
+        run: |
+          mypy -p ascribe --ignore-missing-imports
+      - name: Check PEP 8 Formatting
+        if: ${{ always() }}
+        run: |
+          flake8 --exclude .git,venv,migrations
+
