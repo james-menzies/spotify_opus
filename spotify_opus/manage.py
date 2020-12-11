@@ -14,11 +14,17 @@ manage_commands = Blueprint("manage", "ascribe")
 
 
 @manage_commands.cli.command("reset")
+@click.option('--migrate/--no-migrate', default=True)
 @click.pass_context
-def reset_db(ctx):
-    """This operation will set up a database as if it were """
+def reset_db(ctx, migrate):
+    """This operation will set up a database as if it were brand
+    new for production, with no additional data."""
     ctx.invoke(delete_db)
-    upgrade()
+    if migrate:
+        upgrade()
+    else:
+        db.create_all()
+
     print("Empty tables created.")
     create_defaults()
     print("Defaults added to database.")
@@ -32,15 +38,12 @@ def delete_db():
 
 
 @manage_commands.cli.command("seed")
-@click.option('--reset/--no-reset', default=True)
 @click.pass_context
-def seed_db(ctx, reset):
-    if reset:
-        ctx.invoke(reset_db)
-    else:
-        create_defaults()
+def seed_db(ctx):
+
+    ctx.invoke(reset_db)
     dir_path = Path.cwd().joinpath("resources", "sample_data")
-    add_csv_files(dir_path, ["organizations", "users", "positions"])
+    add_csv_files(dir_path)
     print("Sample data added to database")
 
 
