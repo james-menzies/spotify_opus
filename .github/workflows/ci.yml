@@ -2,8 +2,7 @@ name: Continuous Integration
 
 on:
   push:
-    branches-ignore:
-      - 'master'
+
 
 jobs:
   test-suite:
