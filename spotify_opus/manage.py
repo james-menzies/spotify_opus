@@ -10,7 +10,7 @@ from sqlalchemy import inspect
 
 from spotify_opus import db
 
-manage_commands = Blueprint("manage", "ascribe")
+manage_commands = Blueprint("manage", __name__)
 
 
 @manage_commands.cli.command("reset")
