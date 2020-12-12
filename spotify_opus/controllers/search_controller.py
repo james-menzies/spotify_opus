@@ -1,3 +1,3 @@
 from flask import Blueprint
 
-search = Blueprint("search", "spotify_opus", url_prefix="/search")
+search = Blueprint("search", __name__, url_prefix="/search")

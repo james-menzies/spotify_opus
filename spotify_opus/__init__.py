@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_bcrypt import Bcrypt
+from flask_bootstrap import Bootstrap
 from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
@@ -15,8 +16,9 @@ jwt: JWTManager = JWTManager()
 migrate: Migrate = Migrate(directory="spotify_opus/migrations")
 
 
+
 def create_app() -> Flask:
-    app = Flask("spotify_opus")
+    app = Flask(__name__)
     app.config.from_object(
         "spotify_opus.config.app_config")
 
@@ -25,18 +27,19 @@ def create_app() -> Flask:
     bcrypt.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)
+    Bootstrap(app)
+
+    from spotify_opus.models import SectionName, Track, Work, SubSection, WorkComponent, Album, Artist
 
     from spotify_opus.manage import manage_commands
     app.register_blueprint(manage_commands)
 
     from spotify_opus.controllers import registerable_controllers
-    from spotify_opus.models import Track, Artist, Album, Work, SectionName
-
     for controller in registerable_controllers:
         app.register_blueprint(controller)
 
     @app.errorhandler(ValidationError)
     def handle_bad_request(error):
-        return (jsonify(error=error.messages), 400)
+        return jsonify(error=error.messages), 400
 
     return app

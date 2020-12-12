@@ -13,6 +13,7 @@ def get_from_env(var_name: str) -> str:
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = "BANANA"
+    SECRET_KEY = "DFKJDLKDJ"
 
 
 class DevelopmentConfig(Config):
