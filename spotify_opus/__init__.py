@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_bcrypt import Bcrypt
-from flask_bootstrap import Bootstrap
 from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
@@ -27,7 +26,6 @@ def create_app() -> Flask:
     bcrypt.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)
-    Bootstrap(app)
 
     from spotify_opus.models import SectionName, Track, Work, SubSection, WorkComponent, Album, Artist
 
