@@ -10,6 +10,6 @@ class SubSection(ContextObject):
         "context_objects.context_id"), primary_key=True)
 
     parent_id = db.Column(db.Integer, db.ForeignKey(
-        "work_components.component_id"), nullable=False)
+        "works.work_id"), nullable=False)
 
     number_in_parent = db.Column(db.Integer, nullable=True)
