@@ -14,5 +14,5 @@ class SearchItemVM:
 class CategoryResultVM:
 
     def __init__(self, name: str):
-        self.name : str = name
+        self.name: str = name
         self.items: List[SearchItemVM] = []

@@ -14,9 +14,9 @@ def home_page():
 
         cat = CategoryResultVM(f"Cat number {i}")
         for j in range(1, 5):
-            item = SearchItemVM("", "",)
+            item = SearchItemVM("", "")
             cat.items.append(item)
 
         results.append(cat)
 
-    return render_template("media.html", results=results)
+    return render_template("media.html", results=results, navbar=True)

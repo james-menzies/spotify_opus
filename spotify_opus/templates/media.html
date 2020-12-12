@@ -1,13 +1,22 @@
 {%  extends "base.html" %}
 
 {% block content %}
-    {% for category in content %}
-        <div class="container-fluid">
-            <h2>{{ category.name }}</h2>
-            <div class="row">
-                {% for item in content.items $
+{% for category in results %}
+<div class="container-fluid">
+    <h2>{{ category.name }}</h2>
+    <div class="row">
+        {% for item in category.items %}
+        <div class="col-sm-6 col-md-4">
+            <div class="card my-2 mx-3 p-2">
+                <img src="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg" class="card-img-top" alt="">
+                <h5 class="card-title">{{ item.primary_label }}</h5>
+                <strong class="card-text">{{ item.sec_label }}</strong>
+                <a href="{{ item.url }}" class="btn btn-primary px-5">Select</a>
             </div>
         </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
 
-{% endblock %}
+{% endblock content %}
