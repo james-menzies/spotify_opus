@@ -4,3 +4,5 @@ venv/
 .mypy_cache
 .env
 static/
+opus.pem
+opus_key.pem
