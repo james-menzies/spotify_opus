@@ -15,7 +15,6 @@ jwt: JWTManager = JWTManager()
 migrate: Migrate = Migrate(directory="spotify_opus/migrations")
 
 
-
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(

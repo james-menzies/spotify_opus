@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect
 
 from spotify_opus.models.viewmodels import CategoryResultVM, SearchItemVM
 
@@ -7,6 +7,8 @@ media = Blueprint("media", __name__)
 
 @media.route("/")
 def home_page():
+
+    return redirect("/login", 301)
 
     results = []
 
