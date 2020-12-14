@@ -2,6 +2,7 @@ from typing import Callable, Union
 
 import requests
 from flask import Blueprint, render_template, request, url_for
+from requests import Request
 
 from spotify_opus import SPOTIFY_BASE_URL
 from spotify_opus.models.viewmodels import CategoryResultVM, SearchItemVM
@@ -16,24 +17,33 @@ def home_page(user, req_header):
     results = None
     username = user["display_name"]
     limit = 3
-    item_type = "album,artist,track"
+    item_type = request.args["type"]
+    offset = 0
 
-    if "type" in request.args and len(request.args) == 1:
-        item_type = request.args["type"]
-        limit = 15
+    if "type" in request.args:
+        requested_types = request.args["type"].split(",")
+        if len(requested_types) == 1:
+            limit = 15
+
+    if "page" in request.args:
+        page_num = int(request.args["page"])
+        offset = limit * (page_num - 1)
+        offset = str(offset)
 
     if "q" in request.args:
-        search_data = get_search_results(request.args["q"], req_header, item_type, limit)
+        search_data = get_search_results(
+            request.args["q"], req_header, item_type, limit, offset)
         results = process_spotify_json(search_data)
 
     return render_template("media.html", results=results, username=username, navbar=True)
 
 
-def get_search_results(query, req_header, item_type, limit=3):
+def get_search_results(query, req_header, item_type, limit=3, offset=0):
     params = {
         "q": query,
         "type": item_type,
-        "limit": limit
+        "limit": limit,
+        "offset": offset,
     }
 
     response = requests.get(f"{SPOTIFY_BASE_URL}/v1/search",
@@ -66,6 +76,10 @@ def process_spotify_json(search_data: str):
         sec_label=album["artists"][0]["name"]
     ))
 
+    url = Request.get(url_for(".home_page"), params={
+        "q": request.args["q"],
+        "type": "artist"
+    })
     gen_section("artists", lambda artist: SearchItemVM(
         url=artist["href"],
         image_url=artist["images"][1]["url"],
