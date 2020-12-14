@@ -17,7 +17,8 @@ def home_page(user, req_header):
     username = user["display_name"]
     limit = 3
     item_type = "album,artist,track"
-    if "type" in request.args:
+
+    if "type" in request.args and len(request.args) == 1:
         item_type = request.args["type"]
         limit = 15
 
