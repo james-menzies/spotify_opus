@@ -23,6 +23,6 @@
 - [x] Establish Oauth
 - [x] Implement controllers for handling logging in and out, including redirection
 - [x] Develop adapter for raw Spotify search data and display results.
-- [ ] Develop feature for restricting media type.
+- [x] Develop feature for restricting media type.
 - [ ] Create template for view of specific album
 - [ ] Implement routing to specific album 
