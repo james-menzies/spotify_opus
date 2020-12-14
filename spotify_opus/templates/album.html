@@ -1,11 +1,25 @@
-{% extends base.html %}
+{% extends "base.html" %}
 
 {% block content %}
     <div class="container">
-        {% if album %}
-        <h2>{{ album.title }}</h2>
-        {% else %}}
+        {% if album.name %}
+        <h2>{{ album.name }}</h2>
+        {% else %}
+        <table class="table">
+            <tbody>
+                {% for track in album.tracks %}
+                    <th scope="row">{{ track.track_number }}</th>
+                    <td>{{ track.name }}</td>
+                    <td>
+                        <button class="btn-primary btn">
+                            Play
+                        </button>
+                    </td>
+                {% endfor %}
+            </tbody>
+        </table>
         <h2>Error</h2>
         <p>Server-side error in rendering template.</p>
+        {% endif %}
     </div>
 {% endblock content %}

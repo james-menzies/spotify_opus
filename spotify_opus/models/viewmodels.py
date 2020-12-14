@@ -26,8 +26,8 @@ class CategoryResultVM:
 
 class AlbumVM:
 
-    def __init__(self, title):
-        self.title: str = ""
+    def __init__(self, name):
+        self.name: str = name
         self.composer: str = ""
         self.artists: List[str] = []
         self.tracks: List[TrackVM] = []
