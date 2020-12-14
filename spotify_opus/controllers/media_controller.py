@@ -1,7 +1,7 @@
 from typing import Callable, Union
 
 import requests
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, url_for
 
 from spotify_opus import SPOTIFY_BASE_URL
 from spotify_opus.models.viewmodels import CategoryResultVM, SearchItemVM
@@ -60,7 +60,7 @@ def process_spotify_json(search_data: str):
         results.append(section)
 
     gen_section("albums", lambda album: SearchItemVM(
-        url=album["href"],
+        url=url_for(f"album.view_album", album_id=album["id"]),
         image_url=album["images"][1]["url"],
         primary_label=album["name"],
         sec_label=album["artists"][0]["name"]
@@ -73,7 +73,7 @@ def process_spotify_json(search_data: str):
     ))
 
     gen_section("tracks", lambda track: SearchItemVM(
-        url=track["href"],
+        url=url_for(f"album.view_album", album_id=track["album"]["id"]),
         image_url=track["album"]["images"][1]["url"],
         primary_label=track["name"],
         sec_label=track["artists"][0]["name"]
