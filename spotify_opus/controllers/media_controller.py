@@ -17,7 +17,7 @@ def home_page(user, req_header):
     results = None
     username = user["display_name"]
     limit = 3
-    item_type = request.args["type"]
+    item_type = "artist,album,track"
     offset = 0
 
     if "type" in request.args:
@@ -76,10 +76,7 @@ def process_spotify_json(search_data: str):
         sec_label=album["artists"][0]["name"]
     ))
 
-    url = Request.get(url_for(".home_page"), params={
-        "q": request.args["q"],
-        "type": "artist"
-    })
+
     gen_section("artists", lambda artist: SearchItemVM(
         url=artist["href"],
         image_url=artist["images"][1]["url"],
