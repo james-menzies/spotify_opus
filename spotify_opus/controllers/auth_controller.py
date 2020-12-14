@@ -52,3 +52,8 @@ def callback():
         return redirect(url_for("media.home_page"))
 
 
+@auth.route("/logout")
+def log_out():
+
+    session.pop("token")
+    return redirect(url_for(".log_in"))
