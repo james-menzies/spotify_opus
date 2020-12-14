@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 
 def get_from_env(var_name: str) -> str:
@@ -13,7 +14,8 @@ def get_from_env(var_name: str) -> str:
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = "BANANA"
-    SECRET_KEY = "DFKJDLKDJ"
+    SECRET_KEY = "BANANA"
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
 
 
 class DevelopmentConfig(Config):

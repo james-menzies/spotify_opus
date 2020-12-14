@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, render_template, redirect, url_for, session
 
 from spotify_opus.models.viewmodels import CategoryResultVM, SearchItemVM
 
@@ -7,8 +7,8 @@ media = Blueprint("media", __name__)
 
 @media.route("/")
 def home_page():
-
-    return redirect("/login", 301)
+    if 'token' not in session:
+        return redirect(url_for("auth.log_in"))
 
     results = []
 
