@@ -7,6 +7,9 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import ValidationError
 
+SPOTIFY_BASE_URL = "https://api.spotify.com"
+
+
 load_dotenv()
 db: SQLAlchemy = SQLAlchemy()
 ma: Marshmallow = Marshmallow()

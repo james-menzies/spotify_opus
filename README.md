@@ -17,9 +17,12 @@
 
 ## Roadmap
 
-- [x]  Create underlying models
-- [ ]  Create the media view
-- [ ]  Create the main display view
-- [ ]  Implement OAuth
-- [ ]  Integrate the search funtion to integrate
-- [ ]  Write a script that migrates the Beethoven repertoire
+- [x] Create underlying models
+- [x] Create a view for logging in
+- [x] Create a view for viewing media
+- [x] Establish Oauth
+- [x] Implement controllers for handling logging in and out, including redirection
+- [x] Develop adapter for raw Spotify search data and display results.
+- [ ] Develop feature for restricting media type.
+- [ ] Create template for view of specific album
+- [ ] Implement routing to specific album 
