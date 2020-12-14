@@ -3,11 +3,23 @@
 {% block content %}
     <div class="container">
         {% if album.name %}
-        <h2>{{ album.name }}</h2>
-        {% else %}
+        <h3>{{ album.name }}</h3>
+        <section class="d-flex p-2 flex-row m-3 align-items-end">
+            <img src="{{ album.image_url }}">
+            <li class="list-unstyled">
+                {% for artist in album.artists %}
+                <ul>
+                    <h5>
+                        {{ artist }}
+                    </h5>
+                </ul>
+                {% endfor %}
+            </li>
+        </section>
         <table class="table">
             <tbody>
                 {% for track in album.tracks %}
+                <tr>
                     <th scope="row">{{ track.track_number }}</th>
                     <td>{{ track.name }}</td>
                     <td>
@@ -15,9 +27,12 @@
                             Play
                         </button>
                     </td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+
         <h2>Error</h2>
         <p>Server-side error in rendering template.</p>
         {% endif %}

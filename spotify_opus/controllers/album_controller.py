@@ -13,7 +13,7 @@ album = Blueprint("album", __name__, url_prefix="/album")
 def view_album(album_id: str, req_header: dict, user: dict):
     """Returns a HTML rendered view of a spotify album that
     is classical music sensitive."""
-
+    username = user["display_name"]
     response = requests.get(f"{SPOTIFY_BASE_URL}/v1/albums/{album_id}", headers=req_header)
 
     if not response.ok:
@@ -21,7 +21,8 @@ def view_album(album_id: str, req_header: dict, user: dict):
 
     album_vm = process_spotify_json(response.json())
 
-    return render_template("album.html", album=album_vm, navbar=True)
+    return render_template("album.html", album=album_vm,
+                           navbar=True, username=username)
 
 
 def process_spotify_json(results: dict):
@@ -31,9 +32,10 @@ def process_spotify_json(results: dict):
 
     album_vm = AlbumVM(results["name"])
     album_vm.artists = [artist["name"] for artist in results["artists"]]
+    album_vm.image_url = results["images"][1]["url"]
     for track in results["tracks"]["items"]:
         album_vm.tracks.append(TrackVM(
-            track.name, track.track_number
+            track["name"], track["track_number"]
         ))
 
     return album_vm
