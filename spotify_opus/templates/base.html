@@ -9,8 +9,8 @@
 
 {% if navbar %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <form action="" method="post" class="form-inline my-2 my-lg-0">
-        <input type="search" class="form-control mr-sm-2" placeholder="Search">
+    <form action="" method="get" class="form-inline my-2 my-lg-0">
+        <input type="search" name="q" class="form-control mr-sm-2" placeholder="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
     <span>Welcome, {{ username }}</span>
