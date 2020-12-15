@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <form action="{{ url_for('composer.get_all') }}" method="post">
+        <div class="form-group p-3">
+        {% for field in form %}
+            {{ field.label }}
+            {{ field(class_="form-control") }}
+        {% endfor %}
+        </div>
+
+        <button type="submit" class="btn-primary btn">Create</button>
+    </form>
+</div>
+{% endblock %}
