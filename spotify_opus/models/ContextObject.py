@@ -4,8 +4,7 @@ from spotify_opus import db
 class ContextObject(db.Model):
     __tablename__ = "context_objects"
     context_id = db.Column(db.Integer, primary_key=True)
-    uri = db.Column(db.String(), unique=True, nullable=False)
-    external_uri = db.Column(db.String(), unique=True, nullable=False)
+    image_url = db.Column(db.String(), nullable=True)
     type = db.Column(db.String())
     name = db.Column(db.String(), nullable=False)
 

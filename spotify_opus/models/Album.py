@@ -14,6 +14,7 @@ class Album(ContextObject):
     __tablename__ = "albums"
     album_id = db.Column(db.Integer(), db.ForeignKey(
         "context_objects.context_id"), primary_key=True)
+    external_id = db.Column(db.String(), nullable=False)
     album_type = db.Column(db.Enum(AlbumType), nullable=False)
     release_date = db.Column(db.Date, nullable=False)
 
