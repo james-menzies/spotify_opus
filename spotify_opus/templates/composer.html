@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h2>Composers</h2>
+        <table class="table">
+            <tbody>
+                {% for composer in composers %}
+                <tr>
+                    {% if composer.death_year %}
+                    <td>{{ composer.name }}
+                        ({{ composer.birth_year }} - {{ composer.death_year }})
+                    </td>
+                    {% else %}
+                    <td>{{ composer.name }}
+                        (born {{ composer.birth_year }})
+                    </td>
+                    {% endif %}
+                    <td>
+                        <button class="btn-primary btn">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}
