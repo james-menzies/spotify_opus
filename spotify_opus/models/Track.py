@@ -19,6 +19,9 @@ class Track(ContextObject):
     duration_ms = db.Column(db.Integer, nullable=False)
     disc_no = db.Column(db.Integer, nullable=False)
     explicit = db.Column(db.Boolean, nullable=False)
+    track_number = db.Column(db.Integer, nullable=False)
 
     artists = db.relationship(
         Artist, secondary=association_table, backref="tracks")
+
+

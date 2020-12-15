@@ -6,7 +6,8 @@ class Composer(ContextObject):
     __tablename__ = "composers"
     composer_id = db.Column(db.Integer, db.ForeignKey(
         "context_objects.context_id"), primary_key=True)
-
+    artist_id = db.Column(db.Integer, db.ForeignKey(
+        "artists.external_id"), unique=True, nullable=False)
     birth_year = db.Column(db.Integer, nullable=False)
     death_year = db.Column(db.Integer, nullable=True)
     biography = db.Column(db.String(), nullable=True)

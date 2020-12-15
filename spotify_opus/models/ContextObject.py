@@ -8,7 +8,6 @@ class ContextObject(db.Model):
     type = db.Column(db.String())
     name = db.Column(db.String(), nullable=False)
 
-
     __mapper_args__ = {
         "polymorphic_on": type,
         "polymorphic_identity": "context_objects",
