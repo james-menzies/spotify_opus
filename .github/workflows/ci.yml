@@ -28,7 +28,7 @@ jobs:
       - name: Check Type Hinting
         if: ${{ always() }}
         run: |
-          mypy -p ascribe --ignore-missing-imports
+          mypy -p spotify_opus --ignore-missing-imports
       - name: Check PEP 8 Formatting
         if: ${{ always() }}
         run: |
