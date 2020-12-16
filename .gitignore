@@ -7,3 +7,4 @@ static/
 opus.pem
 opus_key.pem
 tokens/
+*.json

@@ -6,19 +6,26 @@ def get_from_env(var_name: str) -> str:
     value = os.environ.get(var_name)
 
     if not value:
-        raise ValueError(f"{var_name} is not set")
+        raise ValueError(f"{var_name} is not set. Check that your .env file is present and complete.")
 
     return value
 
 
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    JWT_SECRET_KEY = "BANANA"
     SECRET_KEY = "BANANA"
     PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
     SQLALCHEMY_ENGINE_OPTIONS = {
         "echo": False
     }
+
+    @property
+    def ADMIN_REFRESH_TOKEN(self):
+        return get_from_env("ADMIN_REFRESH_TOKEN")
+
+    @property
+    def ADMIN_TOKEN_FILEPATH(self):
+        return get_from_env("ADMIN_TOKEN_FILEPATH")
 
 
 class DevelopmentConfig(Config):
