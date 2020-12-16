@@ -11,7 +11,7 @@ class Artist(ContextObject):
     artist_id = db.Column(db.Integer(), ForeignKey(
         "context_objects.context_id"), primary_key=True)
     external_id = db.Column(db.String(), nullable=False)
-    composer = db.relationship(Composer, uselist=False, foreign_keys=[Composer.artist_id])
+    composer = db.relationship(Composer, backref="artist", uselist=False, foreign_keys=[Composer.artist_id])
 
 
     __mapper_args__ = {

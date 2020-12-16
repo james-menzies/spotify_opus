@@ -6,3 +6,4 @@ venv/
 static/
 opus.pem
 opus_key.pem
+tokens/

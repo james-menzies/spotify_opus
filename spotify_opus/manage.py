@@ -40,16 +40,15 @@ def delete_db():
 @manage_commands.cli.command("seed")
 @click.pass_context
 def seed_db(ctx):
-
     ctx.invoke(reset_db)
     dir_path = Path.cwd().joinpath("resources", "sample_data")
     add_csv_files(dir_path)
     print("Sample data added to database")
 
+
 @manage_commands.cli.command("pull")
 @click.argument('composer_id')
 def pull_external_data(composer_id: int):
-
     from spotify_opus.services.data_extraction import extract_data
 
     try:
@@ -58,7 +57,6 @@ def pull_external_data(composer_id: int):
         print("Please supply a valid Composer ID")
 
     extract_data(composer_id)
-
 
 
 def add_csv_files(dir_path: Path, custom_order=None):

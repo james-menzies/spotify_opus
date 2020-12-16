@@ -1,8 +1,12 @@
 import os
+from datetime import datetime
 
+import pytz
 import requests
-from flask import Blueprint, render_template, redirect, request, url_for, session
+from flask import Blueprint, render_template, redirect, request, url_for, session, g, current_app
 from requests import Request
+
+from spotify_opus import create_app
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
 SPOTIFY_BASE_AUTH_URL = 'https://accounts.spotify.com'
@@ -42,11 +46,17 @@ def callback():
         "client_secret": os.getenv("SPOTIFY_CLIENT_SECRET")
     }
 
+    expiry_time = datetime.now().timestamp()
+
     response = requests.post(f"{SPOTIFY_BASE_AUTH_URL}/api/token", data=data, headers=headers)
 
     if response.status_code == 200:
         session.permanent = True
-        session["token"] = response.json()["access_token"]
+        data = response.json()
+        data["expires_at"] = expiry_time
+
+        session["token"] = data["access_token"]
+        print(data)
         return redirect(url_for("media.home_page"))
 
 
@@ -54,3 +64,5 @@ def callback():
 def log_out():
     session.pop("token")
     return redirect(url_for(".log_in"))
+
+
