@@ -14,7 +14,8 @@ def view_album(album_id: str, req_header: dict, user: dict):
     """Returns a HTML rendered view of a spotify album that
     is classical music sensitive."""
     username = user["display_name"]
-    response = requests.get(f"{SPOTIFY_BASE_URL}/v1/albums/{album_id}", headers=req_header)
+    response = requests.get(
+        f"{SPOTIFY_BASE_URL}/v1/albums/{album_id}", headers=req_header)
 
     if not response.ok:
         return redirect(url_for("media.home_page"))

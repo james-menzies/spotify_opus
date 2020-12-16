@@ -15,7 +15,8 @@ class Track(ContextObject):
     track_id = db.Column(db.Integer, db.ForeignKey(
         "context_objects.context_id"), primary_key=True)
     external_id = db.Column(db.String(), nullable=False)
-    album_id = db.Column(db.Integer, db.ForeignKey("albums.album_id"), nullable=False)
+    album_id = db.Column(
+        db.Integer, db.ForeignKey("albums.album_id"), nullable=False)
     duration_ms = db.Column(db.Integer, nullable=False)
     disc_no = db.Column(db.Integer, nullable=False)
     explicit = db.Column(db.Boolean, nullable=False)
@@ -23,5 +24,3 @@ class Track(ContextObject):
 
     artists = db.relationship(
         Artist, secondary=association_table, backref="tracks")
-
-

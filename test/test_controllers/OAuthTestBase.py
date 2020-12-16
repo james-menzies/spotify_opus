@@ -27,7 +27,8 @@ class OAuthTestBase(unittest.TestCase):
     def run_with_token(self, func: Callable[[Client], Response], token: str):
         """
         Will run a callable on a test_client, with a provided token. This
-        will help set up the session context properly. Will return the response.
+        will help set up the session context properly.
+        It will return the response.
         """
         with self.client as client:
             with client.session_transaction() as session:
@@ -35,7 +36,6 @@ class OAuthTestBase(unittest.TestCase):
             response = func(client)
 
         return response
-
 
     @classmethod
     def tearDown(cls) -> None:

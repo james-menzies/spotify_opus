@@ -15,7 +15,8 @@ composer = Blueprint("composer", __name__, url_prefix="/composer")
 def get_all(req_header, user):
     composers = db.session.query(Composer).all()
     username = user["display_name"]
-    return render_template('composer.html', composers=composers, navbar=True, username=username)
+    return render_template('composer.html', composers=composers,
+                           navbar=True, username=username)
 
 
 @composer.route("/create", methods=["GET"])

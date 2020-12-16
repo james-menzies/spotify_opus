@@ -43,4 +43,3 @@ class TrackVM:
 
     def __repr__(self):
         return f"<TrackVM: {self.track_number}: {self.name}"
-

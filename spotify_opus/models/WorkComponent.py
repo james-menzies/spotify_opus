@@ -9,7 +9,7 @@ class WorkComponent(ContextObject):
     component_id = db.Column(db.Integer, db.ForeignKey(
         "context_objects.context_id"), primary_key=True)
 
-    component_type  = db.Column(db.String(), nullable=False)
+    component_type = db.Column(db.String(), nullable=False)
 
     subsection_type = db.Column(db.String(), nullable=False)
 

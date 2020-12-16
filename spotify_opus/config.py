@@ -6,7 +6,8 @@ def get_from_env(var_name: str) -> str:
     value = os.environ.get(var_name)
 
     if not value:
-        raise ValueError(f"{var_name} is not set. Check that your .env file is present and complete.")
+        raise ValueError(f"{var_name} is not set. Check that your "
+                         f".env file is present and complete.")
 
     return value
 
@@ -16,8 +17,7 @@ class Config:
     SECRET_KEY = "BANANA"
     PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
 
-    echo = os.environ.get("SHOW_SQL")
-    echo = int(echo)
+    echo = int(os.environ.get("SHOW_SQL"))  # type: ignore
     SQLALCHEMY_ENGINE_OPTIONS = {
         "echo": echo
     }
@@ -58,7 +58,6 @@ class ProductionConfig(Config):
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
-
 
 
 environment = os.environ.get("FLASK_ENV")

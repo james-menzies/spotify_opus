@@ -1,8 +1,7 @@
-from typing import Callable, Union
+from typing import Callable
 
 import requests
 from flask import Blueprint, render_template, request, url_for
-from requests import Request
 
 from spotify_opus import SPOTIFY_BASE_URL
 from spotify_opus.models.viewmodels import CategoryResultVM, SearchItemVM
@@ -35,7 +34,8 @@ def home_page(user, req_header):
             request.args["q"], req_header, item_type, limit, offset)
         results = process_spotify_json(search_data)
 
-    return render_template("media.html", results=results, username=username, navbar=True)
+    return render_template(
+        "media.html", results=results, username=username, navbar=True)
 
 
 def get_search_results(query, req_header, item_type, limit=3, offset=0):
@@ -55,10 +55,10 @@ def get_search_results(query, req_header, item_type, limit=3, offset=0):
     return response.json()
 
 
-def process_spotify_json(search_data: str):
+def process_spotify_json(search_data: dict):
     results = []
 
-    def gen_section(key: Union[int, str], func: Callable[[dict], SearchItemVM]) -> None:
+    def gen_section(key: str, func: Callable[[dict], SearchItemVM]) -> None:
         if key not in search_data:
             return
 
@@ -70,12 +70,11 @@ def process_spotify_json(search_data: str):
         results.append(section)
 
     gen_section("albums", lambda album: SearchItemVM(
-        url=url_for(f"album.view_album", album_id=album["id"]),
+        url=url_for("album.view_album", album_id=album["id"]),
         image_url=album["images"][1]["url"],
         primary_label=album["name"],
         sec_label=album["artists"][0]["name"]
     ))
-
 
     gen_section("artists", lambda artist: SearchItemVM(
         url=artist["href"],
@@ -84,7 +83,7 @@ def process_spotify_json(search_data: str):
     ))
 
     gen_section("tracks", lambda track: SearchItemVM(
-        url=url_for(f"album.view_album", album_id=track["album"]["id"]),
+        url=url_for("album.view_album", album_id=track["album"]["id"]),
         image_url=track["album"]["images"][1]["url"],
         primary_label=track["name"],
         sec_label=track["artists"][0]["name"]

@@ -3,10 +3,11 @@ import os
 from datetime import datetime
 from functools import wraps
 from pathlib import Path
+from typing import Optional
 
 import requests
-from flask import session, redirect, url_for, has_request_context, current_app, Response
-from requests import Request
+from flask import session, redirect, url_for, has_request_context, current_app
+from requests import Request, Response
 
 INVALID_TOKEN = "Please delete .json token file and re-attempt operation."
 SPOTIFY_BASE_AUTH_URL = 'https://accounts.spotify.com'
@@ -34,7 +35,8 @@ def verify_user(func):
 
         req_header = get_auth_header(token)
 
-        response = requests.get("https://api.spotify.com/v1/me", headers=req_header)
+        response = requests.get("https://api.spotify.com/v1/me",
+                                headers=req_header)
 
         if not response.ok and not has_request_context():
             raise RuntimeError(INVALID_TOKEN)
@@ -48,7 +50,7 @@ def verify_user(func):
     return wrapper
 
 
-def get_authorization_url() -> str:
+def get_authorization_url() -> Optional[str]:
     """Prepares the url for the 1st phase of the auth code flow.
     Requires the application context.
     """
@@ -58,7 +60,8 @@ def get_authorization_url() -> str:
         "response_type": "code",
         "redirect_uri": f"{redirect_url}/auth/callback"
     }
-    return Request("GET", f"{SPOTIFY_BASE_AUTH_URL}/authorize", params=params).prepare().url
+    return Request("GET", f"{SPOTIFY_BASE_AUTH_URL}/authorize",
+                   params=params).prepare().url
 
 
 def process_callback(code: str) -> Response:
@@ -79,7 +82,8 @@ def process_callback(code: str) -> Response:
         "client_secret": current_app.config["SPOTIFY_CLIENT_SECRET"]
     }
 
-    return requests.post(f"{SPOTIFY_BASE_AUTH_URL}/api/token", data=data, headers=headers)
+    return requests.post(f"{SPOTIFY_BASE_AUTH_URL}/api/token",
+                         data=data, headers=headers)
 
 
 def get_json_token() -> str:
