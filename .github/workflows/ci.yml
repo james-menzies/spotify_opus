@@ -24,6 +24,11 @@ jobs:
         env:
           FLASK_ENV: "testing"
           SHOW_SQL: 1
+          ADMIN_TOKEN_FILEPATH: "dev.json"
+          REDIRECT_URL: "https://127.0.0.1:5000"
+          SPOTIFY_CLIENT_ID: {{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: {{ secrets.SPOTIFY_CLIENT_SECRET }}
+          ADMIN_REFRESH_TOKEN: {{ secrets.ADMIN_REFRESH_TOKEN }}
 
         run: |
           python -m unittest discover test
