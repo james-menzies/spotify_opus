@@ -30,6 +30,18 @@ class Config:
     def ADMIN_TOKEN_FILEPATH(self):
         return get_from_env("ADMIN_TOKEN_FILEPATH")
 
+    @property
+    def SPOTIFY_CLIENT_ID(self):
+        return get_from_env("SPOTIFY_CLIENT_ID")
+
+    @property
+    def SPOTIFY_CLIENT_SECRET(self):
+        return get_from_env("SPOTIFY_CLIENT_SECRET")
+
+    @property
+    def REDIRECT_URL(self):
+        return get_from_env("REDIRECT_URL")
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
@@ -40,14 +52,13 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    @property
-    def JWT_SECRET_KEY(self):
-        return get_from_env("JWT_SECRET_KEY")
+    pass
 
 
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+
 
 
 environment = os.environ.get("FLASK_ENV")

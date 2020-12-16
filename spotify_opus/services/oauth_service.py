@@ -5,9 +5,11 @@ from functools import wraps
 from pathlib import Path
 
 import requests
-from flask import session, redirect, url_for, has_request_context, current_app
+from flask import session, redirect, url_for, has_request_context, current_app, Response
+from requests import Request
 
 INVALID_TOKEN = "Please delete .json token file and re-attempt operation."
+SPOTIFY_BASE_AUTH_URL = 'https://accounts.spotify.com'
 
 
 def verify_user(func):
@@ -44,6 +46,40 @@ def verify_user(func):
         return func(*args, req_header=req_header, user=user, **kwargs)
 
     return wrapper
+
+
+def get_authorization_url() -> str:
+    """Prepares the url for the 1st phase of the auth code flow.
+    Requires the application context.
+    """
+    redirect_url = current_app.config['REDIRECT_URL']
+    params = {
+        "client_id": current_app.config["SPOTIFY_CLIENT_ID"],
+        "response_type": "code",
+        "redirect_uri": f"{redirect_url}/auth/callback"
+    }
+    return Request("GET", f"{SPOTIFY_BASE_AUTH_URL}/authorize", params=params).prepare().url
+
+
+def process_callback(code: str) -> Response:
+    """Will process a call back operation. Takes a code string
+    and return the response from the 2nd phas of the auth flow.
+    """
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    redirect_url = current_app.config["REDIRECT_URL"]
+
+    data = {
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": f"{redirect_url}/auth/callback",
+        "client_id": current_app.config["SPOTIFY_CLIENT_ID"],
+        "client_secret": current_app.config["SPOTIFY_CLIENT_SECRET"]
+    }
+
+    return requests.post(f"{SPOTIFY_BASE_AUTH_URL}/api/token", data=data, headers=headers)
 
 
 def get_json_token() -> str:
