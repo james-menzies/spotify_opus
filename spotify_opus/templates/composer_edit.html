@@ -10,7 +10,12 @@
         {% endfor %}
         </div>
 
-        <button type="submit" class="btn-primary btn">Create</button>
+        <div class="d-flex flex-row">
+            <button type="submit" class="btn-primary btn">Confirm</button>
+            {% if delete_url %}
+                <button class="btn btn-danger" formaction="{{ delete_url }}">Delete</button>
+            {% endif %}
+        </div>
     </form>
 </div>
 {% endblock %}

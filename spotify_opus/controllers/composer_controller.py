@@ -5,7 +5,6 @@ from spotify_opus import db, SPOTIFY_BASE_URL
 from spotify_opus.forms.ComposerForm import ComposerForm
 from spotify_opus.models.Artist import Artist
 from spotify_opus.models.Composer import Composer
-from spotify_opus.models.ContextObject import ContextObject
 from spotify_opus.services.oauth_service import verify_user
 
 composer = Blueprint("composer", __name__, url_prefix="/composer")
@@ -83,8 +82,11 @@ def edit(req_header, user, composer_id: int):
 
     form = ComposerForm(obj=composer)
     submit_url = url_for(".confirm_edit", composer_id=composer_id)
+    delete_url = url_for(".delete", composer_id=composer_id)
+
     return render_template("composer_edit.html",
-                           form=form, navbar=True, submit_url=submit_url)
+                           form=form, navbar=True,
+                           submit_url=submit_url, delete_url=delete_url)
 
 
 @composer.route("/edit/<int:composer_id>", methods=["POST"])
@@ -98,25 +100,29 @@ def confirm_edit(req_header, user, composer_id):
     data = form.data
     data.pop("name", None)
 
-    query = Composer.query
+    query = db.session.query(Composer)
     query = query.filter_by(composer_id=composer_id)
     rows_affected = query.update(data)
+    return complete_update_query(rows_affected)
 
+
+@composer.route("/delete/<int:composer_id>", methods=["POST"])
+@verify_user
+def delete(req_header, user, composer_id):
+    query = db.session.query(Composer)
+    query = query.filter(Composer.composer_id == composer_id)
+    rows_affected = query.delete()
+
+    return complete_update_query(rows_affected)
+
+
+def complete_update_query(rows_affected: int):
     if not rows_affected:
         db.session.rollback()
         return abort(404, "Composer object not found")
     elif rows_affected > 1:
         db.session.rollback()
-        return abort(500, "Multiple row update attempted. Aborting.")
+        return abort(500, "Multiple rows would be affected. Aborting.")
     else:
         db.session.commit()
         return redirect(url_for(".get_all"))
-
-
-
-
-
-
-
-
-

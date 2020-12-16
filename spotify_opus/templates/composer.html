@@ -2,7 +2,13 @@
 
 {% block content %}
     <div class="container">
-        <h2>Composers</h2>
+        <div class="d-flex flex-row">
+            <h2>Composers</h2>
+            <form action="{{ url_for('.create_new') }}">
+                <button class="btn btn-primary mx-4" type="submit">Create</button>
+            </form>
+        </div>
+        {% if composers %}
         <table class="table">
             <tbody>
                 {% for composer in composers %}
@@ -17,13 +23,18 @@
                     </td>
                     {% endif %}
                     <td>
-                        <button class="btn-primary btn">
+                        <form action="{{ url_for('.edit', composer_id=composer.composer_id) }}">
+                            <button class="btn-primary btn" type="submit">
                             Edit
-                        </button>
+                            </button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <p>There are currently no composers, create one to get started.</p>
+        {% endif %}
     </div>
 {% endblock content %}
