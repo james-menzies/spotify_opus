@@ -7,6 +7,8 @@ from pathlib import Path
 import requests
 from flask import session, redirect, url_for, has_request_context, current_app
 
+INVALID_TOKEN = "Please delete .json token file and re-attempt operation."
+
 
 def verify_user(func):
     """ This decorator provides an auth header and user information to
@@ -32,7 +34,9 @@ def verify_user(func):
 
         response = requests.get("https://api.spotify.com/v1/me", headers=req_header)
 
-        if response.status_code != 200:
+        if not response.ok and not has_request_context():
+            raise RuntimeError(INVALID_TOKEN)
+        elif not response.ok:
             return redirect(url_for("auth.log_in"))
 
         user = response.json()
@@ -47,15 +51,12 @@ def get_json_token() -> str:
     If no cached file is present it will create a new one. Returns an access
     token."""
     token_filepath = current_app.config["ADMIN_TOKEN_FILEPATH"]
-    access_token = None
 
     if Path(token_filepath).is_file():
         try:
             access_token = load_json_token(token_filepath)
         except Exception:
-            # removes corrupted file and reattempts
-            os.remove(token_filepath)
-            get_json_token()
+            raise RuntimeError(INVALID_TOKEN)
     else:
         access_token = update_json_token(token_filepath)
 
@@ -77,7 +78,7 @@ def load_json_token(token_filepath) -> str:
 
 def update_json_token(token_filepath):
     """Creates brand new data for token storage and persists it."""
-    expiry = datetime.now().timestamp() + 3600
+    expiry = int(datetime.now().timestamp()) + 3600
     refresh_token = current_app.config["ADMIN_REFRESH_TOKEN"]
     access_token = get_new_token(refresh_token)
     dump_json_token(expiry, refresh_token, access_token, token_filepath)
