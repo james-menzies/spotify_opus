@@ -14,7 +14,7 @@ class Composer(ContextObject):
     country = db.Column(db.String(), nullable=False)
 
     __mapper_args__ = {
-        "polymorphic_identity": "composer"
+        "polymorphic_identity": "composer",
     }
 
     def __repr__(self):
