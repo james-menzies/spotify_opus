@@ -8,8 +8,6 @@ import requests
 from flask import session, redirect, url_for, has_request_context, current_app
 
 
-
-
 def verify_user(func):
     """ This decorator provides an auth header and user information to
     any function it wraps via the req_header and user variables. Any

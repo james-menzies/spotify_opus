@@ -15,8 +15,11 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = "BANANA"
     PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
+
+    echo = os.environ.get("SHOW_SQL")
+    echo = int(echo)
     SQLALCHEMY_ENGINE_OPTIONS = {
-        "echo": False
+        "echo": echo
     }
 
     @property
