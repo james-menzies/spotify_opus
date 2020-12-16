@@ -2,9 +2,10 @@ import requests
 from flask import Blueprint, render_template, request, abort, redirect, url_for
 
 from spotify_opus import db, SPOTIFY_BASE_URL
-from spotify_opus.forms import ComposerForm
+from spotify_opus.forms.ComposerForm import ComposerForm
 from spotify_opus.models.Artist import Artist
 from spotify_opus.models.Composer import Composer
+from spotify_opus.models.ContextObject import ContextObject
 from spotify_opus.services.oauth_service import verify_user
 
 composer = Blueprint("composer", __name__, url_prefix="/composer")
@@ -13,7 +14,6 @@ composer = Blueprint("composer", __name__, url_prefix="/composer")
 @composer.route("/", methods=["GET"])
 @verify_user
 def get_all(req_header, user):
-
     composers = db.session.query(Composer).all()
     username = user["display_name"]
     return render_template('composer.html', composers=composers, navbar=True, username=username)
@@ -23,8 +23,9 @@ def get_all(req_header, user):
 @verify_user
 def create_new(req_header, user):
     form = ComposerForm()
-
-    return render_template('composer_edit.html', form=form)
+    submit_url = url_for(".submit_new")
+    return render_template('composer_edit.html',
+                           form=form, submit_url=submit_url, navbar=True)
 
 
 @composer.route("/", methods=["POST"])
@@ -73,3 +74,49 @@ def submit_new(req_header, user):
     db.session.add(artist)
     db.session.commit()
     return redirect(url_for("composer.get_all"))
+
+
+@composer.route("/edit/<int:composer_id>")
+@verify_user
+def edit(req_header, user, composer_id: int):
+    composer = db.session.query(Composer).get_or_404(composer_id)
+
+    form = ComposerForm(obj=composer)
+    submit_url = url_for(".confirm_edit", composer_id=composer_id)
+    return render_template("composer_edit.html",
+                           form=form, navbar=True, submit_url=submit_url)
+
+
+@composer.route("/edit/<int:composer_id>", methods=["POST"])
+@verify_user
+def confirm_edit(req_header, user, composer_id):
+    form = ComposerForm(request.form)
+
+    if not form.validate():
+        return redirect(url_for("composer.edit", composer_id=composer_id))
+
+    data = form.data
+    data.pop("name", None)
+
+    query = Composer.query
+    query = query.filter_by(composer_id=composer_id)
+    rows_affected = query.update(data)
+
+    if not rows_affected:
+        db.session.rollback()
+        return abort(404, "Composer object not found")
+    elif rows_affected > 1:
+        db.session.rollback()
+        return abort(500, "Multiple row update attempted. Aborting.")
+    else:
+        db.session.commit()
+        return redirect(url_for(".get_all"))
+
+
+
+
+
+
+
+
+

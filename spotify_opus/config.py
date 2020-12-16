@@ -16,6 +16,9 @@ class Config:
     JWT_SECRET_KEY = "BANANA"
     SECRET_KEY = "BANANA"
     PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "echo": True
+    }
 
 
 class DevelopmentConfig(Config):
