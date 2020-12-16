@@ -23,6 +23,8 @@ jobs:
       - name: Run tests
         env:
           FLASK_ENV: "testing"
+          SHOW_SQL: 1
+
         run: |
           python -m unittest discover test
       - name: Check Type Hinting
