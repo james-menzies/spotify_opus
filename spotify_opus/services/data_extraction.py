@@ -21,16 +21,13 @@ T = TypeVar("T")
 
 def extract_data(composer_id: int):
     try:
-        c = aliased(Composer)
-        query = db.session.query(Artist)
-        query = query.join(c, Artist.composer)
-        query = query.filter(c.composer_id == composer_id)
-        query_id = query.one().external_id
+        composer = db.session.query(Composer).get(composer_id)
 
     except NotFound:
         print("Composer ID does not exist in database.")
         return
 
+    external_id = composer.artist.external_id
     url = f"https://api.spotify.com/v1/artists/{query_id}/albums"
     albums = extract_items(create_album, url)
 

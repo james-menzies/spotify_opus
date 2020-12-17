@@ -19,5 +19,12 @@ class Artist(ContextObject):
         "polymorphic_identity": "artist"
     }
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Artist: {self.name}>"
+
+    def __eq__(self, other) -> bool:
+
+        if not isinstance(other, Artist):
+            return False
+
+        return self.external_id == other.external_id
