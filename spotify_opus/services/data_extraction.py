@@ -1,8 +1,6 @@
-import logging
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Callable, TypeVar
 
 import requests
-from flask import current_app
 from sqlalchemy.orm import aliased
 from werkzeug.exceptions import NotFound
 
@@ -10,14 +8,17 @@ from spotify_opus import db
 from spotify_opus.models.Album import Album
 from spotify_opus.models.Artist import Artist
 from spotify_opus.models.Composer import Composer
+from spotify_opus.models.Track import Track
 from spotify_opus.services.oauth_service import verify_user
 
-album_params = {
+max_params = {
     "limit": 50
 }
 
-@verify_user
-def extract_data(composer_id: int, user, req_header):
+T = TypeVar("T")
+
+
+def extract_data(composer_id: int):
     try:
         c = aliased(Composer)
         query = db.session.query(Artist)
@@ -29,43 +30,46 @@ def extract_data(composer_id: int, user, req_header):
         print("Composer ID does not exist in database.")
         return
 
-    albums: List[Album] = []
-
     url = f"https://api.spotify.com/v1/artists/{query_id}/albums"
-    extraction_complete = False
-    while not extraction_complete:
-
-        batch, next_url = get_album_batch(url, req_header)
-
-        if next_url:
-            url = next_url
-        else:
-            extraction_complete = True
-
-        albums += batch
-        current_app.logger.info("Batch of albums processed")
-
-    size = len(albums)
-    for index, album in enumerate(albums):
+    albums = extract_items(create_album, url)
 
 
-
-
+    # for album in albums:
+    #     tracks = extract_items(get)
 
     db.session.add_all(albums)
     db.session.commit()
 
 
-def get_album_batch(url: str, req_header: dict) -> Tuple[List[Album], Optional[str]]:
-    """Returns a batch of albums as well as a url string for the next
+def extract_items(create_func: Callable, url: str) -> List[T]:
+    """A generic function to take all items from a Spotify
+    paging object."""
+    items: List[T] = []
+    extraction_complete = False
+    while not extraction_complete:
+
+        batch, next_url = get_batch(url, create_func)
+        if next_url:
+            url = next_url
+        else:
+            extraction_complete = True
+        items += batch
+
+    return items
+
+
+@verify_user
+def get_batch(url: str, create_func, req_header: dict,
+              user) -> Tuple[List[Album], Optional[str]]:
+    """Returns a batch of items as well as a url string for the next
     retrieval of items. If this was the last page, the second item in
-    the returned Tuple with be None"""
-    response = requests.get(url, headers=req_header, params=album_params)
+    the returned Tuple will be None"""
+    response = requests.get(url, headers=req_header, params=max_params)
     data = response.json()
-    album_items_data = data["items"]
+    items_data = data["items"]
     next_url = data["next"]
 
-    return [create_album(item) for item in album_items_data], next_url
+    return [create_func(item) for item in items_data], next_url
 
 
 def create_album(album_data: dict) -> Album:
@@ -83,3 +87,17 @@ def create_album(album_data: dict) -> Album:
         album.release_date += "-01"
 
     return album
+
+
+def create_track(track_data: dict) -> Track:
+    """Processes a raw Spotify track object and converts
+    it to a native ORM model"""
+
+    track = Track()
+    track.name = track_data["name"]
+    track.external_id = track_data["id"]
+    track.track_number = track_data["track_number"]
+    track.duration_ms = track_data["duration_ms"]
+    track.disc_no = track_data["disc_no"]
+    track.explicit = track_data["explicit"]
+    return track
