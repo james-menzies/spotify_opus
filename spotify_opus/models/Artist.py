@@ -10,10 +10,12 @@ class Artist(ContextObject):
     artist_id = db.Column(db.Integer(), ForeignKey(
         "context_objects.context_id"), primary_key=True)
     external_id = db.Column(db.String(), nullable=False, unique=True)
+    image_url = db.Column(db.String(), nullable=True)
+
     composer = db.relationship(
         Composer, backref="artist", uselist=False,
         foreign_keys=[Composer.artist_id],
-        lazy="raise")
+        lazy="joined")
 
     __mapper_args__ = {
         "polymorphic_identity": "artist"
@@ -28,3 +30,6 @@ class Artist(ContextObject):
             return False
 
         return self.external_id == other.external_id
+
+    def __hash__(self):
+        return hash(self.external_id)

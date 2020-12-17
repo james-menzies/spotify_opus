@@ -21,16 +21,17 @@ T = TypeVar("T")
 
 def extract_data(composer_id: int):
     try:
-        composer = db.session.query(Composer).get(composer_id)
+        composer = db.session.query(Composer).get_or_404(composer_id)
 
     except NotFound:
         print("Composer ID does not exist in database.")
         return
 
-    external_id = composer.artist.external_id
+    query_id = composer.artist.external_id
     url = f"https://api.spotify.com/v1/artists/{query_id}/albums"
     albums = extract_items(create_album, url)
 
+    artists: Set[Artist] = {composer.artist, }
     tracks = []
     url = "https://api.spotify.com/v1/albums/{}/tracks"
 
@@ -39,7 +40,9 @@ def extract_data(composer_id: int):
 
     for album in albums:
         formatted_url = url.format(album.external_id)
-        album_tracks = extract_items(create_track, formatted_url)
+        album_tracks = extract_items(
+            lambda data: create_track(data, artists), formatted_url)
+
         for track in album_tracks:
             track.album_id = album.album_id
         tracks += album_tracks
@@ -79,15 +82,13 @@ def get_batch(url: str, create_func, req_header: dict,
     return [create_func(item) for item in items_data], next_url
 
 
-def add_super_attributes(obj: ContextObject, data):
-    obj.name = data["name"]
-    obj.external_id = data["id"]
-    obj.image_url = data["album"]["images"][1]["url"]
 
 
 def create_album(album_data: dict) -> Album:
     album = Album()
-    add_super_attributes(album, album_data)
+    album.name = album_data["name"]
+    album.external_id = album_data["id"]
+    album.image_url = album_data["images"][1]["url"]
     album.album_type = album_data["album_type"]
     album.release_date = album_data["release_date"]
 
@@ -111,6 +112,9 @@ def create_track(
     track.duration_ms = track_data["duration_ms"]
     track.disc_no = track_data["disc_number"]
     track.explicit = track_data["explicit"]
+    track.artists = [create_artist(data) for data in track_data["artists"]]
+    if artists:
+        artists.union(track.artists)
 
     return track
 
@@ -118,4 +122,5 @@ def create_track(
 def create_artist(artist_data: dict) -> Artist:
     artist = Artist()
     add_super_attributes(artist, artist_data)
+    return artist
 

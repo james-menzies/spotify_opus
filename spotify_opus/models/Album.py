@@ -17,6 +17,8 @@ class Album(ContextObject):
         "context_objects.context_id"), primary_key=True)
     external_id = db.Column(db.String(), nullable=False, unique=True)
     album_type = db.Column(db.Enum(AlbumType), nullable=False)
+    image_url = db.Column(db.String(), nullable=True)
+
     release_date = db.Column(db.Date, nullable=False)
     tracks = db.relationship(
         Track, backref="album", foreign_keys=[Track.album_id])
