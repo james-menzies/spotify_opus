@@ -24,3 +24,6 @@ class Album(ContextObject):
     __mapper_args__ = {
         "polymorphic_identity": "album"
     }
+
+    def __repr__(self):
+        return f"<Album: {self.name}>"

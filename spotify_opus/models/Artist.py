@@ -12,7 +12,8 @@ class Artist(ContextObject):
     external_id = db.Column(db.String(), nullable=False)
     composer = db.relationship(
         Composer, backref="artist", uselist=False,
-        foreign_keys=[Composer.artist_id])
+        foreign_keys=[Composer.artist_id],
+        lazy="raise")
 
     __mapper_args__ = {
         "polymorphic_identity": "artist"
