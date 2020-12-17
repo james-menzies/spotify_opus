@@ -18,3 +18,6 @@ class Artist(ContextObject):
     __mapper_args__ = {
         "polymorphic_identity": "artist"
     }
+
+    def __repr__(self):
+        return f"<Artist: {self.name}>"

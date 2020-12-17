@@ -1,4 +1,4 @@
-from typing import Tuple, List, Optional, Callable, TypeVar
+from typing import Tuple, List, Optional, Callable, TypeVar, Set
 
 import requests
 from sqlalchemy.orm import aliased
@@ -98,9 +98,11 @@ def create_album(album_data: dict) -> Album:
     return album
 
 
-def create_track(track_data: dict) -> Track:
+def create_track(
+        track_data: dict, artists: Set[Artist] = None) -> Track:
     """Processes a raw Spotify track object and converts
-    it to a native ORM model"""
+    it to a native ORM model. It will also append any artists
+    found if a set is provided."""
 
     track = Track()
     track.name = track_data["name"]
@@ -109,4 +111,7 @@ def create_track(track_data: dict) -> Track:
     track.duration_ms = track_data["duration_ms"]
     track.disc_no = track_data["disc_number"]
     track.explicit = track_data["explicit"]
+    track.image_url = track_data["album"]["images"][1]["url"]
+
+
     return track
