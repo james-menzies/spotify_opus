@@ -24,3 +24,7 @@ class Track(ContextObject):
 
     artists = db.relationship(
         Artist, secondary=association_table, backref="tracks")
+
+    __mapper_args__ = {
+        "polymorphic_identity": "track"
+    }

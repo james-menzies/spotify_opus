@@ -33,11 +33,20 @@ def extract_data(composer_id: int):
     url = f"https://api.spotify.com/v1/artists/{query_id}/albums"
     albums = extract_items(create_album, url)
 
-
-    # for album in albums:
-    #     tracks = extract_items(get)
+    tracks = []
+    url = "https://api.spotify.com/v1/albums/{}/tracks"
 
     db.session.add_all(albums)
+    db.session.commit()
+
+    for album in albums:
+        formatted_url = url.format(album.external_id)
+        album_tracks = extract_items(create_track, formatted_url)
+        for track in album_tracks:
+            track.album_id = album.album_id
+        tracks += album_tracks
+
+    db.session.add_all(tracks)
     db.session.commit()
 
 
@@ -51,8 +60,8 @@ def extract_items(create_func: Callable, url: str) -> List[T]:
         batch, next_url = get_batch(url, create_func)
         if next_url:
             url = next_url
-        else:
-            extraction_complete = True
+
+        extraction_complete = True
         items += batch
 
     return items
@@ -98,6 +107,6 @@ def create_track(track_data: dict) -> Track:
     track.external_id = track_data["id"]
     track.track_number = track_data["track_number"]
     track.duration_ms = track_data["duration_ms"]
-    track.disc_no = track_data["disc_no"]
+    track.disc_no = track_data["disc_number"]
     track.explicit = track_data["explicit"]
     return track
