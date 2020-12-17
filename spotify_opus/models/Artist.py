@@ -9,7 +9,7 @@ class Artist(ContextObject):
     __tablename__ = "artists"
     artist_id = db.Column(db.Integer(), ForeignKey(
         "context_objects.context_id"), primary_key=True)
-    external_id = db.Column(db.String(), nullable=False)
+    external_id = db.Column(db.String(), nullable=False, unique=True)
     composer = db.relationship(
         Composer, backref="artist", uselist=False,
         foreign_keys=[Composer.artist_id],

@@ -8,6 +8,7 @@ from spotify_opus import db
 from spotify_opus.models.Album import Album
 from spotify_opus.models.Artist import Artist
 from spotify_opus.models.Composer import Composer
+from spotify_opus.models.ContextObject import ContextObject
 from spotify_opus.models.Track import Track
 from spotify_opus.services.oauth_service import verify_user
 
@@ -81,11 +82,15 @@ def get_batch(url: str, create_func, req_header: dict,
     return [create_func(item) for item in items_data], next_url
 
 
+def add_super_attributes(obj: ContextObject, data):
+    obj.name = data["name"]
+    obj.external_id = data["id"]
+    obj.image_url = data["album"]["images"][1]["url"]
+
+
 def create_album(album_data: dict) -> Album:
     album = Album()
-    album.name = album_data["name"]
-    album.external_id = album_data["id"]
-    album.image_url = album_data["images"][1]["url"]
+    add_super_attributes(album, album_data)
     album.album_type = album_data["album_type"]
     album.release_date = album_data["release_date"]
 
@@ -105,13 +110,15 @@ def create_track(
     found if a set is provided."""
 
     track = Track()
-    track.name = track_data["name"]
-    track.external_id = track_data["id"]
-    track.track_number = track_data["track_number"]
+    add_super_attributes(track, track_data)
     track.duration_ms = track_data["duration_ms"]
     track.disc_no = track_data["disc_number"]
     track.explicit = track_data["explicit"]
-    track.image_url = track_data["album"]["images"][1]["url"]
-
 
     return track
+
+
+def create_artist(artist_data: dict) -> Artist:
+    artist = Artist()
+    add_super_attributes(artist, artist_data)
+

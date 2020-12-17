@@ -14,7 +14,7 @@ class Track(ContextObject):
 
     track_id = db.Column(db.Integer, db.ForeignKey(
         "context_objects.context_id"), primary_key=True)
-    external_id = db.Column(db.String(), nullable=False)
+    external_id = db.Column(db.String(), nullable=False, unique=True)
     album_id = db.Column(
         db.Integer, db.ForeignKey("albums.album_id"), nullable=False)
     duration_ms = db.Column(db.Integer, nullable=False)
