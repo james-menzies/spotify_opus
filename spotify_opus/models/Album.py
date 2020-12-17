@@ -29,3 +29,10 @@ class Album(ContextObject):
 
     def __repr__(self):
         return f"<Album: {self.name}>"
+
+    def __eq__(self, other):
+
+        if not isinstance(other, Album):
+            return False
+
+        return self.external_id == other.external_id

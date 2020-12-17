@@ -7,4 +7,3 @@ class ComposerForm(ModelForm):
     class Meta:
         model = Composer
         include_primary_keys = False
-        exclude = ["image_url"]

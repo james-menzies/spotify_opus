@@ -33,3 +33,4 @@ class Artist(ContextObject):
 
     def __hash__(self):
         return hash(self.external_id)
+
