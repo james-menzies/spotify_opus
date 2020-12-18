@@ -1,6 +1,5 @@
 from spotify_opus import db
 from spotify_opus.models.Artist import Artist
-from spotify_opus.models.ContextObject import ContextObject
 
 association_table = db.Table(
     'tracks_artists',
@@ -9,11 +8,12 @@ association_table = db.Table(
 )
 
 
-class Track(ContextObject):
+class Track(db.Model):
     __tablename__ = "tracks"
 
-    track_id = db.Column(db.Integer, db.ForeignKey(
-        "context_objects.context_id"), primary_key=True)
+    track_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    sanitized_name = db.Column(db.String, nullable=True)
     external_id = db.Column(db.String(), nullable=False, unique=True)
     album_id = db.Column(
         db.Integer, db.ForeignKey("albums.album_id"), nullable=False)
@@ -25,6 +25,3 @@ class Track(ContextObject):
     artists = db.relationship(
         Artist, secondary=association_table, backref="tracks")
 
-    __mapper_args__ = {
-        "polymorphic_identity": "track"
-    }

@@ -19,7 +19,7 @@ def create_app() -> Flask:
     db.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)
 
-    from spotify_opus.models import Artist, Album, Work, SectionName
+    from spotify_opus.models import Artist, Album, Work
 
     from spotify_opus.manage import manage_commands
     app.register_blueprint(manage_commands)
