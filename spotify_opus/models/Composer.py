@@ -5,7 +5,7 @@ class Composer(db.Model):
     __tablename__ = "composers"
     composer_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    artist_id = db.Column(db.Integer, db.ForeignKey(
+    artist_id = db.Column(db.String, db.ForeignKey(
         "artists.artist_id"), nullable=False)
     birth_year = db.Column(db.Integer, nullable=False)
     death_year = db.Column(db.Integer, nullable=True)
