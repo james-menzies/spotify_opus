@@ -4,8 +4,7 @@ from spotify_opus.models.Composer import Composer
 
 class Artist(db.Model):
     __tablename__ = "artists"
-    artist_id = db.Column(db.Integer(), primary_key=True)
-    external_id = db.Column(db.String(), nullable=False, unique=True)
+    artist_id = db.Column(db.String(), primary_key=True, autoincrement=False)
     image_url = db.Column(db.String(), nullable=True)
     name = db.Column(db.String(), nullable=False)
 

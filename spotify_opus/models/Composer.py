@@ -3,8 +3,8 @@ from spotify_opus import db
 
 class Composer(db.Model):
     __tablename__ = "composers"
-    name = db.Column(db.String, nullable=False)
     composer_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
     artist_id = db.Column(db.Integer, db.ForeignKey(
         "artists.artist_id"), nullable=False)
     birth_year = db.Column(db.Integer, nullable=False)

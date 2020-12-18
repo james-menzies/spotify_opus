@@ -11,10 +11,9 @@ association_table = db.Table(
 class Track(db.Model):
     __tablename__ = "tracks"
 
-    track_id = db.Column(db.Integer, primary_key=True)
+    track_id = db.Column(db.String, primary_key=True, autoincrement=False)
     name = db.Column(db.String, nullable=False)
     sanitized_name = db.Column(db.String, nullable=True)
-    external_id = db.Column(db.String(), nullable=False, unique=True)
     album_id = db.Column(
         db.Integer, db.ForeignKey("albums.album_id"), nullable=False)
     duration_ms = db.Column(db.Integer, nullable=False)

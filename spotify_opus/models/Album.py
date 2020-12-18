@@ -4,8 +4,7 @@ from spotify_opus.models.Track import Track
 
 class Album(db.Model):
     __tablename__ = "albums"
-    album_id = db.Column(db.Integer(), primary_key=True)
-    external_id = db.Column(db.String(), nullable=False, unique=True)
+    album_id = db.Column(db.String(), primary_key=True, autoincrement=False)
     album_type = db.Column(db.String(), nullable=False)
     image_url = db.Column(db.String(), nullable=True)
     name = db.Column(db.String(), nullable=False)
