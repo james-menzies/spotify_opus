@@ -62,7 +62,7 @@ def submit_new(req_header, user):
     artist = Artist()
     artist.name = artist_name
     artist.image_url = artist_data["images"][1]["url"]
-    artist.external_id = artist_data["id"]
+    artist.artist_id = artist_data["id"]
 
     composer = Composer()
     for name, value in form.data.items():

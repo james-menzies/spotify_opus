@@ -20,4 +20,4 @@ class Album(db.Model):
         if not isinstance(other, Album):
             return False
 
-        return self.external_id == other.external_id
+        return self.album_id == other.album_id

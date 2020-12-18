@@ -20,7 +20,7 @@ class Artist(db.Model):
         if not isinstance(other, Artist):
             return False
 
-        return self.external_id == other.external_id
+        return self.artist_id == other.artist_id
 
     def __hash__(self):
-        return hash(self.external_id)
+        return hash(self.artist_id)
