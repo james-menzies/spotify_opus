@@ -21,11 +21,16 @@ class Track(db.Model):
     explicit = db.Column(db.Boolean, nullable=False)
     track_number = db.Column(db.Integer, nullable=True)
 
-    artists = db.relationship(
-        Artist, secondary=association_table, backref="tracks")
+    artists = db.relationship(Artist, secondary=association_table,
+                              backref="tracks", lazy="joined")
+
+    performance_id = db.Column(
+        db.Integer, db.ForeignKey("performances.performance_id"), nullable=True)
+
+    def __repr__(self):
+        return f"<Track: {self.name}>"
 
     def __eq__(self, other):
-
         if not isinstance(other, Track):
             return False
 

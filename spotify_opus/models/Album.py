@@ -10,8 +10,7 @@ class Album(db.Model):
     name = db.Column(db.String(), nullable=False)
 
     release_date = db.Column(db.Date, nullable=False)
-    tracks = db.relationship(
-        Track, backref="album", foreign_keys=[Track.album_id])
+    tracks = db.relationship(Track, backref="album", lazy="joined")
 
     def __repr__(self):
         return f"<Album: {self.name}>"

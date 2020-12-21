@@ -1,3 +1,4 @@
+import importlib
 import itertools
 import os
 from pathlib import Path
@@ -48,7 +49,7 @@ def seed_db(ctx):
 
 @manage_commands.cli.command("pull")
 @click.argument('composer_id')
-def pull_external_data(composer_id: int):
+def pull_external_data(composer_id):
     from spotify_opus.services.data_extraction import extract_data
 
     try:
@@ -57,6 +58,16 @@ def pull_external_data(composer_id: int):
         print("Please supply a valid Composer ID")
 
     extract_data(composer_id)
+
+
+@manage_commands.cli.command("run")
+@click.argument("module")
+def generate_works(module):
+    """
+    Will run a specific script located in the scripts folder. This is mainly
+    a pass through method to provide an application context for the script.
+    """
+    importlib.import_module(f"spotify_opus.services.scripts.{module}")
 
 
 def add_csv_files(dir_path: Path, custom_order=None):
