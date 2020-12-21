@@ -1,5 +1,7 @@
+import logging
 import os
 from datetime import timedelta
+
 
 
 def get_from_env(var_name: str) -> str:
@@ -45,6 +47,8 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
+
+    logging.basicConfig(level=logging.INFO)
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):

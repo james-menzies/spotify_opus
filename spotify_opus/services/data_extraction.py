@@ -1,6 +1,7 @@
 from typing import Tuple, List, Optional, Callable, TypeVar, Set, Any
 
 import requests
+from flask import current_app
 from werkzeug.exceptions import NotFound
 
 from spotify_opus import db
@@ -37,14 +38,18 @@ def extract_data(composer_id: int):
     existing_albums = Album.query.all()
     existing_artists = Artist.query.all()
 
-    albums = [album for album in albums if album not in existing_albums]
-    artists = {artist for artist in artists if artist not in existing_artists}
+    new_albums = [album for album in albums if album not in existing_albums]
+    new_artists = {artist for artist in artists if artist not in existing_artists}
 
-    db.session.bulk_save_objects(albums)
-    db.session.bulk_save_objects(artists)
+    db.session.bulk_save_objects(new_albums)
+    db.session.bulk_save_objects(new_artists)
     db.session.flush()
 
-    for album in albums:
+    total_albums = len(albums)
+    for item, album in enumerate(albums):
+        if item % 20 == 0:
+            print (f"{item}/{total_albums} albums processed")
+
         formatted_url = url.format(album.album_id)
         album_tracks = extract_items(
             lambda data: create_track(data, artists), formatted_url)
@@ -57,11 +62,6 @@ def extract_data(composer_id: int):
 
     track_artists = []
     for track in tracks:
-
-        track_artists.append({
-            "track_id": track.track_id,
-            "artist_id": composer.artist.artist_idk
-        })
 
         for artist in track.artists:
             track_artists.append({
@@ -83,8 +83,8 @@ def extract_items(create_func: Callable, url: str) -> List[T]:
         batch, next_url = get_batch(url, create_func)
         if next_url:
             url = next_url
-
-        extraction_complete = True
+        else:
+            extraction_complete = True
         items += batch
 
     return items
