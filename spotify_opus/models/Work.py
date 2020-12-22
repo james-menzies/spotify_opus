@@ -20,6 +20,13 @@ class Work(db.Model):
     more_info = db.Column(db.String(), nullable=True)
     performances = db.relationship(Performance, backref="work")
 
+    def __init__(self):
+        self.album = None
+        self.composer = None
+
+    def __repr__(self):
+        return f"<Work: {self.composer.name}: {self.name}>"
+
     def __eq__(self, other):
 
         if not isinstance(other, Work):
@@ -29,5 +36,3 @@ class Work(db.Model):
                 self.opus_no == other.opus_no and \
                 self.catalog_no == other.catalog_no
 
-    def __hash__(self):
-        return hash(self.work_id)

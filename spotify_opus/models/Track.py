@@ -22,7 +22,7 @@ class Track(db.Model):
     track_number = db.Column(db.Integer, nullable=True)
 
     artists = db.relationship(Artist, secondary=association_table,
-                              backref="tracks", lazy="joined")
+                              backref="tracks", lazy="raise")
 
     performance_id = db.Column(
         db.Integer, db.ForeignKey("performances.performance_id"), nullable=True)
