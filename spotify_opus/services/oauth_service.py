@@ -9,6 +9,9 @@ import requests
 from flask import session, redirect, url_for, has_request_context, current_app
 from requests import Request, Response
 
+from spotify_opus import db
+from spotify_opus.models.User import User
+
 INVALID_TOKEN = "Please delete .json token file and re-attempt operation."
 SPOTIFY_BASE_AUTH_URL = 'https://accounts.spotify.com'
 
@@ -48,11 +51,40 @@ class VerifyUser:
             elif not response.ok:
                 return redirect(url_for("auth.log_in"))
 
-            user = response.json()
+            user_data = response.json()
+            user = create_admin_user(user_data)
+
+            if self.admin and not user:
+                return redirect(url_for("auth.log_in"))
+            elif not user:
+                user = create_user(user_data)
 
             return func(*args, req_header=req_header, user=user, **kwargs)
 
         return wrapper
+
+
+def create_admin_user(user_data: dict) -> Optional[User]:
+    """Takes the user object from the Spotify API and
+    queries the database to check if the user is an administrator.
+    If so, returns the User model for it, or None if user is not an
+    admin."""
+
+    user_ext_id = user_data["id"]
+    query = db.session.query(User)
+    query = query.filter(User.external_id == user_ext_id)
+    user = query.first()
+
+    return user
+
+
+def create_user(user_data: dict) -> User:
+    """Creates a brand new user from the raw Spotify user object."""
+    user = User()
+    user.admin = False
+    user.name = user_data["display_name"]
+    user.external_id = user_data["id"]
+    return user
 
 
 def get_authorization_url() -> Optional[str]:

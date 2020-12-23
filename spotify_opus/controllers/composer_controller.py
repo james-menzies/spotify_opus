@@ -14,9 +14,8 @@ composer = Blueprint("composer", __name__)
 @VerifyUser()
 def get_all(req_header, user):
     composers = db.session.query(Composer).all()
-    username = user["display_name"]
     return render_template('composer.html', composers=composers,
-                           navbar=True, username=username)
+                           navbar=True, user=user)
 
 
 @composer.route("/create", methods=["GET"])
@@ -25,11 +24,12 @@ def create_new(req_header, user):
     form = ComposerForm()
     submit_url = url_for(".submit_new")
     return render_template('composer_edit.html',
-                           form=form, submit_url=submit_url, navbar=True)
+                           form=form, submit_url=submit_url,
+                           navbar=True, user=user)
 
 
 @composer.route("/", methods=["POST"])
-@VerifyUser()
+@VerifyUser(admin=True)
 def submit_new(req_header, user):
     form = ComposerForm(request.form)
 
@@ -77,7 +77,7 @@ def submit_new(req_header, user):
 
 
 @composer.route("/edit/<int:composer_id>")
-@VerifyUser()
+@VerifyUser(admin=True)
 def edit(req_header, user, composer_id: int):
     composer = db.session.query(Composer).get_or_404(composer_id)
 
@@ -87,11 +87,12 @@ def edit(req_header, user, composer_id: int):
 
     return render_template("composer_edit.html",
                            form=form, navbar=True,
-                           submit_url=submit_url, delete_url=delete_url)
+                           submit_url=submit_url, delete_url=delete_url,
+                           user=user)
 
 
 @composer.route("/edit/<int:composer_id>", methods=["POST"])
-@VerifyUser()
+@VerifyUser(admin=True)
 def confirm_edit(req_header, user, composer_id):
     form = ComposerForm(request.form)
 
