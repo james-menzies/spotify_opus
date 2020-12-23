@@ -41,7 +41,6 @@ def get_all(composer_id: int, user, req_header):
     pagination = Pagination(page=page, total=count, per_page=per_page,
                             css_framework='bootstrap4')
 
-    username = user["display_name"]
     return render_template("works.html", works=works,
-                           navbar=True, username=username,
+                           navbar=True, user=user,
                            composer=composer.name, pagination=pagination)

@@ -42,9 +42,7 @@ def get_by_work(work_id: int, user, req_header):
                           sec_labels=artist_names[1:])
         container.items.append(vm)
 
-    username = user["display_name"]
-
-    return render_template("media.html", results=results, navbar=True, username=username)
+    return render_template("media.html", results=results, navbar=True, user=user)
 
 
 @performance.route("/performances/<int:performance_id>")
@@ -62,7 +60,6 @@ def playback(performance_id: int, user, req_header):
     vm.artists = [artist.name for artist in performance.tracks[0].artists]
 
     for track in performance.tracks:
-
         total_duration_in_seconds = track.duration_ms // 1000
         sec_attr = total_duration_in_seconds % 60
         min_attr = total_duration_in_seconds // 60
@@ -71,5 +68,3 @@ def playback(performance_id: int, user, req_header):
         vm.tracks.append(track_vm)
 
     return render_template("album.html", album=vm)
-
-
