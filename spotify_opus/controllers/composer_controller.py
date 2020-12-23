@@ -7,7 +7,7 @@ from spotify_opus.models.Artist import Artist
 from spotify_opus.models.Composer import Composer
 from spotify_opus.services.oauth_service import verify_user
 
-composer = Blueprint("composer", __name__, url_prefix="/composer")
+composer = Blueprint("composer", __name__)
 
 
 @composer.route("/", methods=["GET"])
