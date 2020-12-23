@@ -30,7 +30,7 @@ def callback():
         session.permanent = True
         data = response.json()
         session["token"] = data["access_token"]
-        return redirect(url_for("media.home_page"))
+        return redirect(url_for("composer.get_all"))
 
 
 @auth.route("/logout")
