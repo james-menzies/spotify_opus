@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="container">
-        <h2>Works</h2>
+        <h2 class="p-3">Works by {{ composer }}</h2>
         {% if works %}
         <table class="table">
             <tbody>
@@ -20,5 +20,9 @@
         {% else %}
         <p>There are no works by this composer in the database.</p>
         {% endif %}
+    </div>
+    <div class="m-auto">
+
+        {{ pagination.links }}
     </div>
 {% endblock content %}
