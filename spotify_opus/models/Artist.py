@@ -1,5 +1,4 @@
 from spotify_opus import db
-from spotify_opus.models.Composer import Composer
 
 
 class Artist(db.Model):
@@ -8,10 +7,8 @@ class Artist(db.Model):
     image_url = db.Column(db.String(), nullable=True)
     name = db.Column(db.String(), nullable=False)
 
-    composer = db.relationship(
-        Composer, backref="artist", uselist=False,
-        foreign_keys=[Composer.artist_id],
-        lazy="joined")
+    composer_id = db.Column(db.Integer, db.ForeignKey(
+        "composers.composer_id"), nullable=True)
 
     def __repr__(self) -> str:
         return f"<Artist: {self.name}>"

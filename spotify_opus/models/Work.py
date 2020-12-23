@@ -1,7 +1,6 @@
 from sqlalchemy import ForeignKey
 
 from spotify_opus import db
-from spotify_opus.models.Composer import Composer
 from spotify_opus.models.Performance import Performance
 
 
@@ -12,7 +11,8 @@ class Work(db.Model):
 
     name = db.Column(db.String(), nullable=False)
     composer_id = db.Column(
-        db.Integer, ForeignKey(Composer.composer_id), nullable=False)
+        db.Integer, ForeignKey("composers.composer_id"
+                               ""), nullable=False)
 
     catalog_no = db.Column(db.String(), nullable=True)
     opus_no = db.Column(db.String(), nullable=True)

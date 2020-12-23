@@ -1,7 +1,7 @@
 import re
-from typing import Dict, Optional, Set, List
+from typing import Dict, Optional, List
 
-from sqlalchemy.orm import joinedload, contains_eager
+from sqlalchemy.orm import contains_eager
 
 from spotify_opus import db
 from spotify_opus.models.Album import Album
@@ -41,13 +41,13 @@ class Generator:
 
         query = db.session.query(Album)
         query = query.join(Album.tracks)
-        query = query.options(contains_eager(Album.tracks ))
+        query = query.options(contains_eager(Album.tracks))
         query = query.join(Track.artists)
         query = query.join(Artist.composer)
         query = query.filter(Composer.composer_id == self.composer.composer_id)
 
         albums = query.all()
-        for album in albums[:30]:
+        for album in albums:
 
             new_performances: Dict[Work, Performance] = {}
             for track in album.tracks:

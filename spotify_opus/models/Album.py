@@ -1,5 +1,3 @@
-from sqlalchemy.orm import backref
-
 from spotify_opus import db
 from spotify_opus.models.Performance import Performance
 from spotify_opus.models.Track import Track
