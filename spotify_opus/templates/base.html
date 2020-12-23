@@ -10,7 +10,7 @@
 {% if navbar %}
 <nav class="navbar navbar-expand-lg bg-light fixed-top">
 <div class="nav navbar-nav">
-    <span class="mx-4">Welcome, {{ username }}</span>
+    <span class="mx-4">Welcome, {{ user.name }}</span>
     <a href="{{ url_for('composer.get_all') }}">
         <span class="mx-4">Back to Start</span>
     </a>

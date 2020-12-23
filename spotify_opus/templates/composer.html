@@ -4,9 +4,11 @@
     <div class="container">
         <div class="d-flex flex-row">
             <h2>Composers</h2>
+            {% if user.admin %}
             <form action="{{ url_for('.create_new') }}">
                 <button class="btn btn-primary mx-4" type="submit">Create</button>
             </form>
+            {% endif %}
         </div>
         {% if composers %}
         <table class="table">
@@ -25,11 +27,13 @@
                     </a>
                     </td>
                     <td>
+                        {% if user.admin %}
                         <form action="{{ url_for('.edit', composer_id=composer.composer_id) }}">
                             <button class="btn-primary btn" type="submit">
                             Edit
                             </button>
                         </form>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
