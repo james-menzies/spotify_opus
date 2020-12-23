@@ -9,7 +9,7 @@ from spotify_opus.models.Album import Album
 from spotify_opus.models.Artist import Artist
 from spotify_opus.models.Composer import Composer
 from spotify_opus.models.Track import Track, association_table
-from spotify_opus.services.oauth_service import verify_user
+from spotify_opus.services.oauth_service import VerifyUser
 
 max_params = {
     "limit": 50
@@ -90,7 +90,7 @@ def extract_items(create_func: Callable, url: str) -> List[T]:
     return items
 
 
-@verify_user
+@VerifyUser
 def get_batch(url: str, create_func, req_header: dict,
               user) -> Tuple[List[Any], Optional[str]]:
     """Returns a batch of items as well as a url string for the next

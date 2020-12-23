@@ -5,13 +5,13 @@ from spotify_opus import db, SPOTIFY_BASE_URL
 from spotify_opus.forms.ComposerForm import ComposerForm
 from spotify_opus.models.Artist import Artist
 from spotify_opus.models.Composer import Composer
-from spotify_opus.services.oauth_service import verify_user
+from spotify_opus.services.oauth_service import VerifyUser
 
 composer = Blueprint("composer", __name__)
 
 
 @composer.route("/", methods=["GET"])
-@verify_user
+@VerifyUser()
 def get_all(req_header, user):
     composers = db.session.query(Composer).all()
     username = user["display_name"]
@@ -20,7 +20,7 @@ def get_all(req_header, user):
 
 
 @composer.route("/create", methods=["GET"])
-@verify_user
+@VerifyUser(admin=True)
 def create_new(req_header, user):
     form = ComposerForm()
     submit_url = url_for(".submit_new")
@@ -29,7 +29,7 @@ def create_new(req_header, user):
 
 
 @composer.route("/", methods=["POST"])
-@verify_user
+@VerifyUser()
 def submit_new(req_header, user):
     form = ComposerForm(request.form)
 
@@ -77,7 +77,7 @@ def submit_new(req_header, user):
 
 
 @composer.route("/edit/<int:composer_id>")
-@verify_user
+@VerifyUser()
 def edit(req_header, user, composer_id: int):
     composer = db.session.query(Composer).get_or_404(composer_id)
 
@@ -91,7 +91,7 @@ def edit(req_header, user, composer_id: int):
 
 
 @composer.route("/edit/<int:composer_id>", methods=["POST"])
-@verify_user
+@VerifyUser()
 def confirm_edit(req_header, user, composer_id):
     form = ComposerForm(request.form)
 
@@ -108,7 +108,7 @@ def confirm_edit(req_header, user, composer_id):
 
 
 @composer.route("/delete/<int:composer_id>", methods=["POST"])
-@verify_user
+@VerifyUser()
 def delete(req_header, user, composer_id):
     query = db.session.query(Composer)
     query = query.filter(Composer.composer_id == composer_id)

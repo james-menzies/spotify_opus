@@ -5,13 +5,13 @@ from spotify_opus import db
 from spotify_opus.models.Performance import Performance
 from spotify_opus.models.Work import Work
 from spotify_opus.models.viewmodels import CategoryResultVM, SearchItemVM, AlbumVM, TrackVM
-from spotify_opus.services.oauth_service import verify_user
+from spotify_opus.services.oauth_service import VerifyUser
 
 performance = Blueprint("performance", __name__)
 
 
 @performance.route("/works/<int:work_id>/performances")
-@verify_user
+@VerifyUser()
 def get_by_work(work_id: int, user, req_header):
     """Get all of the performances of a particular work
     and display to the user."""
@@ -48,7 +48,7 @@ def get_by_work(work_id: int, user, req_header):
 
 
 @performance.route("/performances/<int:performance_id>")
-@verify_user
+@VerifyUser()
 def playback(performance_id: int, user, req_header):
     """Render the playback page for a performance."""
 

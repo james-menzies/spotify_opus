@@ -5,7 +5,7 @@ from sqlalchemy import asc, func
 from spotify_opus import db
 from spotify_opus.models.Composer import Composer
 from spotify_opus.models.Work import Work
-from spotify_opus.services.oauth_service import verify_user
+from spotify_opus.services.oauth_service import VerifyUser
 
 work = Blueprint(
     "work", __name__, url_prefix='/composers/<int:composer_id>/works')
@@ -14,7 +14,7 @@ standard_limit = 30
 
 
 @work.route("/")
-@verify_user
+@VerifyUser()
 def get_all(composer_id: int, user, req_header):
     """Gets all works written by the composer ID contained in the
     path of the url."""

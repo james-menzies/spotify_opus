@@ -13,7 +13,7 @@ INVALID_TOKEN = "Please delete .json token file and re-attempt operation."
 SPOTIFY_BASE_AUTH_URL = 'https://accounts.spotify.com'
 
 
-def verify_user(func):
+class VerifyUser:
     """ This decorator provides an auth header and user information to
     any function it wraps via the req_header and user variables. Any
     wrapped function MUST accept these arguments as parameters.
@@ -24,30 +24,35 @@ def verify_user(func):
     application.
     """
 
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if has_request_context() and 'token' not in session:
-            return redirect(url_for("auth.log_in"))
-        elif not has_request_context():
-            token = get_json_token()
-        else:
-            token = session["token"]
+    def __init__(self, admin: bool = False):
 
-        req_header = get_auth_header(token)
+        self.admin = admin
 
-        response = requests.get("https://api.spotify.com/v1/me",
-                                headers=req_header)
+    def __call__(self, func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if has_request_context() and 'token' not in session:
+                return redirect(url_for("auth.log_in"))
+            elif not has_request_context():
+                token = get_json_token()
+            else:
+                token = session["token"]
 
-        if not response.ok and not has_request_context():
-            raise RuntimeError(INVALID_TOKEN)
-        elif not response.ok:
-            return redirect(url_for("auth.log_in"))
+            req_header = get_auth_header(token)
 
-        user = response.json()
+            response = requests.get("https://api.spotify.com/v1/me",
+                                    headers=req_header)
 
-        return func(*args, req_header=req_header, user=user, **kwargs)
+            if not response.ok and not has_request_context():
+                raise RuntimeError(INVALID_TOKEN)
+            elif not response.ok:
+                return redirect(url_for("auth.log_in"))
 
-    return wrapper
+            user = response.json()
+
+            return func(*args, req_header=req_header, user=user, **kwargs)
+
+        return wrapper
 
 
 def get_authorization_url() -> Optional[str]:
