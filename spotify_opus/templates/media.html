@@ -11,7 +11,11 @@
                 <div class="card my-2 mx-3 p-2">
                     <img src="{{item.image_url}}" class="card-img-top" alt="">
                     <h5 class="card-title">{{ item.primary_label }}</h5>
-                    <strong class="card-text">{{ item.sec_label }}</strong>
+                    {% for label in item.sec_labels %}
+                    <strong class="card-text">
+                        {{ label }}
+                    </strong>
+                    {% endfor %}
                     <a href="{{ item.url }}" class="btn btn-primary px-5">Select</a>
                 </div>
             </div>

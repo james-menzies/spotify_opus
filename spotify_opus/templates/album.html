@@ -6,22 +6,22 @@
         <h3>{{ album.name }}</h3>
         <section class="d-flex p-2 flex-row m-3 align-items-end">
             <img src="{{ album.image_url }}">
-            <li class="list-unstyled">
+            <ul class="list-unstyled">
                 {% for artist in album.artists %}
-                <ul>
+                <li>
                     <h5>
                         {{ artist }}
                     </h5>
-                </ul>
+                </li>
                 {% endfor %}
-            </li>
+            </ul>
         </section>
         <table class="table">
             <tbody>
                 {% for track in album.tracks %}
                 <tr>
-                    <th scope="row">{{ track.track_number }}</th>
                     <td>{{ track.name }}</td>
+                    <td>{{ track.duration }}</td>
                     <td>
                         <button class="btn-primary btn">
                             Play

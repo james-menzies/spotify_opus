@@ -12,7 +12,7 @@ class Album(db.Model):
 
     release_date = db.Column(db.Date, nullable=False)
     tracks = db.relationship(Track, backref="album", lazy="raise")
-    performances = db.relationship(Performance, backref="album")
+    performances = db.relationship(Performance, backref="album", lazy="raise")
 
     def __repr__(self):
         return f"<Album: {self.name}>"
