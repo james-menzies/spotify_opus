@@ -13,15 +13,17 @@
             <tbody>
                 {% for composer in composers %}
                 <tr>
-                    {% if composer.death_year %}
-                    <td>{{ composer.name }}
-                        ({{ composer.birth_year }} - {{ composer.death_year }})
-                    </td>
-                    {% else %}
-                    <td>{{ composer.name }}
-                        (born {{ composer.birth_year }})
-                    </td>
+                    <td>
+                    <a href="{{ url_for('work.get_all', composer_id=composer.composer_id) }}">
+                        {% if composer.death_year %}
+                            {{ composer.name }}
+                            ({{ composer.birth_year }} - {{ composer.death_year }})
+                        {% else %}
+                            {{ composer.name }}
+                            (born {{ composer.birth_year }})
                     {% endif %}
+                    </a>
+                    </td>
                     <td>
                         <form action="{{ url_for('.edit', composer_id=composer.composer_id) }}">
                             <button class="btn-primary btn" type="submit">
