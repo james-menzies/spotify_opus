@@ -32,7 +32,12 @@ class Work(db.Model):
         if not isinstance(other, Work):
             return False
         else:
+
             return self.composer_id == other.composer_id and \
                 self.opus_no == other.opus_no and \
                 self.catalog_no == other.catalog_no
+
+    def __hash__(self):
+
+        return hash((self.composer_id, self.opus_no, self.catalog_no))
 

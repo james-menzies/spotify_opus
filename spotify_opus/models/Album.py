@@ -1,3 +1,5 @@
+from sqlalchemy.orm import backref
+
 from spotify_opus import db
 from spotify_opus.models.Performance import Performance
 from spotify_opus.models.Track import Track
@@ -12,7 +14,7 @@ class Album(db.Model):
 
     release_date = db.Column(db.Date, nullable=False)
     tracks = db.relationship(Track, backref="album", lazy="raise")
-    performances = db.relationship(Performance, backref="album", lazy="raise")
+    performances = db.relationship(Performance, backref="album")
 
     def __repr__(self):
         return f"<Album: {self.name}>"

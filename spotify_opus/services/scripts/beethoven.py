@@ -1,10 +1,11 @@
 import re
-from typing import Dict, Optional
+from typing import Dict, Optional, Set, List
 
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, contains_eager
 
 from spotify_opus import db
 from spotify_opus.models.Album import Album
+from spotify_opus.models.Artist import Artist
 from spotify_opus.models.Composer import Composer
 from spotify_opus.models.Performance import Performance
 from spotify_opus.models.Track import Track
@@ -33,28 +34,31 @@ class Generator:
         query = db.session.query(Composer)
         query = query.filter(Composer.name == "Ludwig van Beethoven")
         self.composer: Composer = query.first_or_404()
-        self.performances: Dict[int, Performance] = {}
-        self.works: Dict[int, Work] = {}
+        self.performances: List[Performance] = []
+        self.works: Dict[str, Work] = {}
 
     def generate_works_from_tracks(self):
+
         query = db.session.query(Album)
         query = query.join(Album.tracks)
-        query = query.options(joinedload(Album.tracks))
+        query = query.options(contains_eager(Album.tracks ))
         query = query.join(Track.artists)
-        query = query.join(Composer)
+        query = query.join(Artist.composer)
         query = query.filter(Composer.composer_id == self.composer.composer_id)
 
         albums = query.all()
-
-
-
-        for album in albums[:5]:
+        for album in albums[:30]:
 
             new_performances: Dict[Work, Performance] = {}
             for track in album.tracks:
 
                 work = self.process_track(track)
                 if work:
+                    if work.opus_no not in self.works:
+                        self.works[work.opus_no] = work
+                    else:
+                        work = self.works[work.opus_no]
+
                     if work not in new_performances:
                         performance = Performance()
                         performance.work = work
@@ -63,12 +67,7 @@ class Generator:
 
                     new_performances[work].tracks.append(track)
 
-
-
-
-
-
-        db.session.add_all(self.works)
+        db.session.add_all(self.works.values())
         db.session.commit()
 
     def process_track(self, track: Track) -> Optional[Work]:
