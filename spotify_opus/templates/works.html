@@ -9,7 +9,7 @@
                 {% for work in works %}
                 <tr>
                     <td>
-                    <a href="{{ url_for('composer.get_all') }}">
+                    <a href="{{ url_for('performance.get_by_work', work_id=work.work_id) }}">
                         {{ work.name }}
                     </a>
                     </td>
