@@ -3,18 +3,20 @@
 {% block content %}
 <div class="container">
     <form action="{{ submit_url }}" method="post">
-        <div class="form-group p-3">
+        <div class="form-group p-3 m-auto" style="max-width: 450px;">
         {% for field in form %}
-            {{ field.label }}
+            <div class="p-2">
+                 {{ field.label }}
             {{ field(class_="form-control") }}
-        {% endfor %}
-        </div>
+            </div>
 
-        <div class="d-flex flex-row">
+        {% endfor %}
+            <div class="d-flex flex-row m-3">
             <button type="submit" class="btn-primary btn">Confirm</button>
             {% if delete_url %}
-                <button class="btn btn-danger" formaction="{{ delete_url }}">Delete</button>
+                <button class="btn btn-danger ml-2" formaction="{{ delete_url }}">Delete</button>
             {% endif %}
+        </div>
         </div>
     </form>
 </div>
