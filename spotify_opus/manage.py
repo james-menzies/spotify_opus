@@ -2,6 +2,7 @@ import importlib
 
 import click
 from flask import Blueprint
+from flask_alchemydumps.cli import create
 from flask_migrate import upgrade
 
 from spotify_opus import db
@@ -52,3 +53,15 @@ def generate_works(module):
     a pass through method to provide an application context for the script.
     """
     importlib.import_module(f"spotify_opus.services.scripts.{module}")
+
+@manage_commands.cli.command("seed")
+@click.argument("filename")
+def seed(filename):
+    from sqlalchemy import text
+
+    with open(filename, "r", encoding='utf-8') as file:
+        sql = file.read()
+
+    sql = text(sql)
+    db.engine.execute(sql)
+    print("Database populated")

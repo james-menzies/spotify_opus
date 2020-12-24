@@ -1,5 +1,5 @@
 import requests
-from flask import Blueprint, render_template, request, abort, redirect, url_for
+from flask import Blueprint, render_template, request, abort, redirect, url_for, flash
 
 from spotify_opus import db, SPOTIFY_BASE_URL
 from spotify_opus.forms.ComposerForm import ComposerForm
@@ -12,10 +12,10 @@ composer = Blueprint("composer", __name__)
 
 @composer.route("/", methods=["GET"])
 @VerifyUser()
-def get_all(req_header, user):
+def get_all(req_header, user, success=None):
     composers = db.session.query(Composer).all()
     return render_template('composer.html', composers=composers,
-                           navbar=True, user=user)
+                           navbar=True, user=user, success=success)
 
 
 @composer.route("/create", methods=["GET"])
@@ -51,13 +51,15 @@ def submit_new(req_header, user):
     artist_data = response.json()["artists"]["items"]
 
     if len(artist_data) == 0:
-        return abort(400, "No results match against Spotify's records")
+        flash("No results match against Spotify's records", "danger")
+        return redirect(url_for(".get_all"))
 
     artist_data = artist_data[0]
     artist_name = artist_data["name"]
 
     if artist_name.lower() != form.name.data.lower():
-        return abort(400, "Name submitted does not match records")
+        flash("Name submitted does not match records", "danger")
+        return redirect(url_for(".get_all"))
 
     artist = Artist()
     artist.name = artist_name
@@ -73,6 +75,7 @@ def submit_new(req_header, user):
 
     db.session.add(artist)
     db.session.commit()
+    flash("Composer added to database", "success")
     return redirect(url_for("composer.get_all"))
 
 
@@ -97,6 +100,7 @@ def confirm_edit(req_header, user, composer_id):
     form = ComposerForm(request.form)
 
     if not form.validate():
+        flash("Form invalid. Please check fields and retry.")
         return redirect(url_for("composer.edit", composer_id=composer_id))
 
     data = form.data
@@ -105,26 +109,33 @@ def confirm_edit(req_header, user, composer_id):
     query = db.session.query(Composer)
     query = query.filter_by(composer_id=composer_id)
     rows_affected = query.update(data)
-    return complete_update_query(rows_affected)
+    return complete_update_query(rows_affected, "updated")
 
 
 @composer.route("/delete/<int:composer_id>", methods=["POST"])
 @VerifyUser()
 def delete(req_header, user, composer_id):
+
+    query = db.session.query(Artist)
+    query = query.filter(Artist.composer_id == composer_id)
+    query.update({Artist.composer_id: None})
+
     query = db.session.query(Composer)
     query = query.filter(Composer.composer_id == composer_id)
     rows_affected = query.delete()
 
-    return complete_update_query(rows_affected)
+    return complete_update_query(rows_affected, "deleted")
 
 
-def complete_update_query(rows_affected: int):
+def complete_update_query(rows_affected: int, operation: str):
     if not rows_affected:
         db.session.rollback()
-        return abort(404, "Composer object not found")
+        flash("Composer object not found", "danger")
     elif rows_affected > 1:
         db.session.rollback()
-        return abort(500, "Multiple rows would be affected. Aborting.")
+        flash("Server error when updating composer", "danger")
     else:
         db.session.commit()
-        return redirect(url_for(".get_all"))
+        flash(f"Composer successfully {operation}.", "success")
+
+    return redirect(url_for(".get_all"))

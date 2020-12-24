@@ -2,6 +2,35 @@ Recently, I published a case study on Spotify's technological infrastructure. Wi
 
 I would highly recommend reading the [case study](docs/A%20Case%20Study%20on%20Spotify.pdf) before browsing the rest of this project, in particular sections R7 - R9.
 
+## Installation for Local Development
+
+In order to use this repository locally, you will need a .env file with the relevant client secrets in order to use this code base. Please email me for a copy, unfortunately I cannot store this information publically for security reasons.
+
+Similarly, a populated database can be added on request
+
+1. Clone the repository locally.
+2. Install a database on your local system if not present. I would recommend PostgresQL if wanting to pre-populate the database.
+3. Place the provided .env file in the root of the directory.
+4. Set the DB_URI in the .env file so that the application can link to the database. For example:
+```
+DB_URI='postgres+psycopg2://user:password@localhost/dbname'
+```
+5. (If prepopulating) Prepopulate the database with the provided .sql file by executing:
+```
+psql {dbname} < path/to/sqlfile
+```
+If not prepopulating, run the following command instead:
+```
+flask manage reset
+```
+
+6. Run the app by executing:
+```
+flask run
+```
+
+7. The local server should be available at `http://localhost:5000/`
+
 ## The Data Structure
 
 When implementing the new data model, there were some necessary compromises and alterations from the original vision, either due to keeping the scope of the project manageable or practical considerations during implementation. The revised scheme is below:
