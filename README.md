@@ -1,23 +1,27 @@
-Recently, I published an case study on Spotify's technological infrastructure. Within it I raised the notion of altering the underlying data structure so that it could cater better for consumers of classical music. This repository is a rudimentary full stack prototype of the data model proposed in that case study, as well as a small demonstration of the front end features that it could enable.
+Recently, I published a case study on Spotify's technological infrastructure. Within, I raised the notion of altering the underlying data structure so that it could cater better for consumers of classical music. This repository is a rudimentary full stack prototype of the data model proposed in that case study, as well as a small demonstration of the front end features that it could enable.
 
-I would highly recommend reading the case study before browsing the rest of this project, in particular sections R7 - R9.
+I would highly recommend reading the [case study](docs/A%20Case%20Study%20on%20Spotify.pdf) before browsing the rest of this project, in particular sections R7 - R9.
 
 ## The Data Structure
 
 When implementing the new data model, there were some necessary compromises and alterations from the original vision, either due to keeping the scope of the project manageable or practical considerations during implementation. The revised scheme is below:
+
+![Opus ERD](docs/spotify_opus_erd.png)
 
 ### Notes
 
 - The super type entity `ContextObject` has been abandoned due to complications with implementing inheritance in a database.
 - As the front end application will support browing by composer, the `Composer` entity has been added to assist creating the initial `GET` request as the entry point of the application.
 - Similar to `Composer`, the `Performance` entity has been added to facilitate the selection of performances of the same work.
-- Infinite nesting of `SubSection` entities within works has been abandoned.
+- Subsections have been abandoned. Works will be displayed instead via the `sanitized_name` attribute of the `Track` entity.
 
 ## Features
 
 ### Searching
 
 Typically a user listening to classical music will want to search for a specific piece of music, which can be cumbersome to achieve with the existing Spotify model. This application supports searching for music via the following progression: 
+
+![User flow of application](docs/user_flow.png)
 
 This application enables that progression via the new data model and its endpoints.
 
@@ -73,7 +77,7 @@ In order to extract data for a single composer, the following steps need to take
 2. Obtain the ID of the `Composer` entity.
 3. Then on the back end server running the application, run the following command:
 
-```jsx
+```
 flask manage pull {composer_id} 
 ```
 
@@ -81,7 +85,9 @@ This operation can take some time, due to the nature of how Spotify paginates it
 
 ### Data Parsing
 
-(to be completed) 
+To expedite the process of parsing data, the CLI also offers the ability to run custom Python scripts to interact with the database. By placing a Python script in the `spotify_opus/services/scripts` directory, and running the command `flask manage run {script.py}`, a developer is able to run arbitrary Python code whilst also having the application context available to interact with the data layer.
+
+In this repo, I've used the `beethoven.py` script to migrate all of the pulled tracks featuring Beethoven, and safely create `Work` and `Performance` entities, as well as sanitize the names of the `Track` entities.
 
 ## Tech Stack
 
