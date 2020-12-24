@@ -68,11 +68,15 @@ This is to mitigate any potential security concerns as a result of refresh token
 
 `/login`
 
+![login screen](docs/screenshots/login.png)
+
 ### Composers
 
 If the signed on user is an administrator, there will also be controls to add or edit composer entities.
 
 `/composers`
+
+![composer screen](docs/screenshots/composers.png)
 
 ### Composer Edit
 
@@ -81,18 +85,24 @@ A simple form to create or alter a `Composer` entity. When adding a composer, th
 `/composers/create`
 
 `/composers/edit`
+![composer screen](docs/screenshots/composer_edit.png)
 
 ### Works
 
 `/composers/{id}/works`
+![composer screen](docs/screenshots/works.png)
 
 ### Performance
 
 `/works/{id}/performances`
 
+![composer screen](docs/screenshots/performances.png)
+
 ### Playback
 
 `/performances/{id}`
+
+![composer screen](docs/screenshots/play.png)
 
 ## Migration Techniques
 
