@@ -3,7 +3,6 @@ import os
 from datetime import timedelta
 
 
-
 def get_from_env(var_name: str) -> str:
     value = os.environ.get(var_name)
 
@@ -31,6 +30,14 @@ class Config:
     @property
     def ADMIN_TOKEN_FILEPATH(self):
         return get_from_env("ADMIN_TOKEN_FILEPATH")
+
+    @property
+    def BASIC_REFRESH_TOKEN(self):
+        return get_from_env("BASIC_REFRESH_TOKEN")
+
+    @property
+    def BASIC_TOKEN_FILEPATH(self):
+        return get_from_env("BASIC_TOKEN_FILEPATH")
 
     @property
     def SPOTIFY_CLIENT_ID(self):

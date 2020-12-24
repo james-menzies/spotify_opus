@@ -25,7 +25,6 @@ def create_app() -> Flask:
     from spotify_opus.manage import manage_commands
     app.register_blueprint(manage_commands)
 
-
     from spotify_opus.controllers import registerable_controllers
     for controller in registerable_controllers:
         app.register_blueprint(controller)

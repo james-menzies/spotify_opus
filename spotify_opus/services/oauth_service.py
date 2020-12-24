@@ -123,11 +123,14 @@ def process_callback(code: str) -> Response:
                          data=data, headers=headers)
 
 
-def get_json_token() -> str:
+def get_json_token(admin=False) -> str:
     """Loads an access token from file storage, with the 'TOKEN' .env variables.
     If no cached file is present it will create a new one. Returns an access
     token."""
-    token_filepath = current_app.config["ADMIN_TOKEN_FILEPATH"]
+    if admin:
+        token_filepath = current_app.config["ADMIN_TOKEN_FILEPATH"]
+    else:
+        token_filepath = current_app.config["BASIC_TOKEN_FILEPATH"]
 
     if Path(token_filepath).is_file():
         try:
@@ -153,10 +156,15 @@ def load_json_token(token_filepath) -> str:
         return data["access_token"]
 
 
-def update_json_token(token_filepath):
+def update_json_token(token_filepath, admin=False):
     """Creates brand new data for token storage and persists it."""
     expiry = int(datetime.now().timestamp()) + 3600
-    refresh_token = current_app.config["ADMIN_REFRESH_TOKEN"]
+
+    if admin:
+        refresh_token = current_app.config["ADMIN_REFRESH_TOKEN"]
+    else:
+        refresh_token = current_app.config["BASIC_REFRESH_TOKEN"]
+
     access_token = get_new_token(refresh_token)
     dump_json_token(expiry, refresh_token, access_token, token_filepath)
     return access_token

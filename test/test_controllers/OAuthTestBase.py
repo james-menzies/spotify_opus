@@ -24,6 +24,8 @@ class OAuthTestBase(unittest.TestCase):
         if result.exit_code != 0:
             raise ValueError(result.stdout)
 
+
+
     def run_with_token(self, func: Callable[[Client], Response], token: str):
         """
         Will run a callable on a test_client, with a provided token. This

@@ -1,7 +1,6 @@
 from typing import Tuple, List, Optional, Callable, TypeVar, Set, Any
 
 import requests
-from flask import current_app
 from werkzeug.exceptions import NotFound
 
 from spotify_opus import db
