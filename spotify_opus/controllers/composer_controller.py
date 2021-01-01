@@ -5,6 +5,7 @@ from spotify_opus import db, SPOTIFY_BASE_URL
 from spotify_opus.forms.ComposerForm import ComposerForm
 from spotify_opus.models.Artist import Artist
 from spotify_opus.models.Composer import Composer
+from spotify_opus.models.Work import Work
 from spotify_opus.services.oauth_service import VerifyUser
 
 composer = Blueprint("composer", __name__)
@@ -55,16 +56,16 @@ def submit_new(req_header, user):
         return redirect(url_for(".get_all"))
 
     artist_data = artist_data[0]
-    artist_name = artist_data["name"]
+    artist = create_artist(artist_data)
 
-    if artist_name.lower() != form.name.data.lower():
+    if artist.name.lower() != form.name.data.lower():
         flash("Name submitted does not match records", "danger")
         return redirect(url_for(".get_all"))
 
-    artist = Artist()
-    artist.name = artist_name
-    artist.image_url = artist_data["images"][1]["url"]
-    artist.artist_id = artist_data["id"]
+    existing_artist = db.session.query(Artist).get(artist.artist_id)
+
+    if existing_artist:
+        artist = existing_artist
 
     composer = Composer()
     for name, value in form.data.items():
@@ -77,6 +78,16 @@ def submit_new(req_header, user):
     db.session.commit()
     flash("Composer added to database", "success")
     return redirect(url_for("composer.get_all"))
+
+
+def create_artist(artist_data: dict) -> Artist:
+    """Creates a native Artist object from a raw Spotify artist object."""
+    artist = Artist()
+    artist.name = artist_data["name"]
+    artist.image_url = artist_data["images"][1]["url"]
+    artist.artist_id = artist_data["id"]
+
+    return artist
 
 
 @composer.route("/edit/<int:composer_id>")
@@ -112,22 +123,7 @@ def confirm_edit(req_header, user, composer_id):
     return complete_update_query(rows_affected, "updated")
 
 
-@composer.route("/delete/<int:composer_id>", methods=["POST"])
-@VerifyUser()
-def delete(req_header, user, composer_id):
-
-    query = db.session.query(Artist)
-    query = query.filter(Artist.composer_id == composer_id)
-    query.update({Artist.composer_id: None})
-
-    query = db.session.query(Composer)
-    query = query.filter(Composer.composer_id == composer_id)
-    rows_affected = query.delete()
-
-    return complete_update_query(rows_affected, "deleted")
-
-
-def complete_update_query(rows_affected: int, operation: str):
+def complete_update_query(rows_affected: int):
     if not rows_affected:
         db.session.rollback()
         flash("Composer object not found", "danger")
@@ -136,6 +132,32 @@ def complete_update_query(rows_affected: int, operation: str):
         flash("Server error when updating composer", "danger")
     else:
         db.session.commit()
-        flash(f"Composer successfully {operation}.", "success")
+        flash(f"Composer successfully updated.", "success")
+
+    return redirect(url_for(".get_all"))
+
+
+@composer.route("/delete/<int:composer_id>", methods=["POST"])
+@VerifyUser()
+def delete(req_header, user, composer_id):
+    query = db.session.query(Composer)
+    query = query.filter(Composer.composer_id == composer_id)
+    composer = query.first()
+
+    query = query.join(Work)
+    composer_with_works = query.first()
+
+    if composer and not composer_with_works:
+        db.session.delete(composer)
+
+        query = db.session.query(Artist)
+        query = query.filter(Artist.composer_id == composer_id)
+        query.update({Artist.composer_id: None})
+        db.session.commit()
+        flash("Composer successfully deleted.", "success")
+    elif composer_with_works:
+        flash("Composer has works associated, cannot delete until works are manually removed.", "danger")
+    else:
+        flash("Composer does not exist.", "danger")
 
     return redirect(url_for(".get_all"))
