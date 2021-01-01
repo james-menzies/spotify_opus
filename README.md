@@ -6,7 +6,7 @@ I would highly recommend reading the [case study](docs/A%20Case%20Study%20on%20S
 
 In order to use this repository locally, you will need a .env file with the relevant client secrets in order to use this code base. Please email me for a copy, unfortunately I cannot store this information publically for security reasons.
 
-Similarly, a populated database can be added on request
+Similarly, a populated database can be added on request, however note that **_the user must be using a Postgres database_**.
 
 1. Clone the repository locally.
 2. Install a database on your local system if not present. I would recommend PostgresQL if wanting to pre-populate the database.
@@ -144,11 +144,11 @@ In this repo, I've used the `beethoven.py` script to migrate all of the pulled t
 
 ## Professional Obligations
 
-To read about legal, ethical, and professional matters relating to this project, please click here.
+To read about legal, ethical, and professional matters relating to this project, [please click here](docs/professional_obligations.md).
 
 ## Security
 
-For a detailed discussion on risk mitigation strategies, such as OAuth handling and CSRF protection, please read the security report for this project.
+For a detailed discussion on risk mitigation strategies, such as OAuth handling and CSRF protection, please read the [security report for this project](docs/security_report.md).
 
 ## CI / CD
 
