@@ -6,6 +6,8 @@ from flask import Flask, Response
 from werkzeug import Client
 
 from spotify_opus import db, create_app
+from spotify_opus.models.User import User
+from spotify_opus.services.oauth_service import get_json_token
 
 
 class OAuthTestBase(unittest.TestCase):
@@ -14,7 +16,7 @@ class OAuthTestBase(unittest.TestCase):
     def setUp(cls) -> None:
         os.environ["FLASK_ENV"] = "testing"
         cls.app: Flask = create_app()
-        cls.app_context = cls.app.app_context()
+        cls.app_context = cls.app.test_request_context()
         cls.app_context.push()
         cls.client = cls.app.test_client()
 
@@ -23,6 +25,17 @@ class OAuthTestBase(unittest.TestCase):
         result = runner.invoke(args=["manage", "reset", "--no-migrate"])
         if result.exit_code != 0:
             raise ValueError(result.stdout)
+
+        cls.admin_token = get_json_token(admin=True)
+        cls.basic_token = get_json_token(admin=False)
+
+        admin = User()
+        admin.name = "Spotify Dev"
+        admin.external_id = "bdnhvv7geqzyj9j48h0vhj4kj"
+        admin.admin = True
+
+        db.session.add(admin)
+        db.session.commit()
 
 
 

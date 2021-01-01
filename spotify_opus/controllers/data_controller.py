@@ -24,7 +24,7 @@ def ensure_backup_dir():
 
 @data.route("/")
 @VerifyUser(admin=True)
-def download(user, req_header):
+def backup(user, req_header):
     """Writes all data to a csv file, minus sensitive information, and prepares
     it as a download for the user."""
 
