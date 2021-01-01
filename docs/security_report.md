@@ -1,4 +1,5 @@
-#Security Report
+# Security Report
+
 The following document provides a summary of the potential attacks the application could face, as well as the mitigation techniques that have been applied throughout the code base. 
 
 ## Authentication
