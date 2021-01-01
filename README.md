@@ -104,6 +104,8 @@ A simple form to create or alter a `Composer` entity. When adding a composer, th
 
 ![composer screen](docs/screenshots/play.png)
 
+The playback buttons are merely for demonstration only, the point of the view is to show a works tracks, with sanitized track names.
+
 ## Migration Techniques
 
 ### Data Extraction
