@@ -34,10 +34,9 @@ class Work(db.Model):
         else:
 
             return self.composer_id == other.composer_id and \
-                self.opus_no == other.opus_no and \
-                self.catalog_no == other.catalog_no
+                   self.opus_no == other.opus_no and \
+                   self.catalog_no == other.catalog_no
 
     def __hash__(self):
 
         return hash((self.composer_id, self.opus_no, self.catalog_no))
-

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, abort
+from flask import Blueprint, render_template, request
 from flask_paginate import get_page_parameter, Pagination
 from sqlalchemy import asc, func
 

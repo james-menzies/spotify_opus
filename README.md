@@ -72,7 +72,7 @@ This is to mitigate any potential security concerns as a result of refresh token
 
 ### Composers
 
-If the signed on user is an administrator, there will also be controls to add or edit composer entities.
+If the signed on user is an administrator, there will also be controls to add or edit composer entities. There will also be a link to back up the entire database.
 
 `/composers`
 
@@ -85,11 +85,13 @@ A simple form to create or alter a `Composer` entity. When adding a composer, th
 `/composers/create`
 
 `/composers/edit`
+
 ![composer screen](docs/screenshots/composer_edit.png)
 
 ### Works
 
 `/composers/{id}/works`
+
 ![composer screen](docs/screenshots/works.png)
 
 ### Performance
@@ -126,7 +128,7 @@ This operation can take some time, due to the nature of how Spotify paginates it
 
 ### Data Parsing
 
-To expedite the process of parsing data, the CLI also offers the ability to run custom Python scripts to interact with the database. By placing a Python script in the `spotify_opus/services/scripts` directory, and running the command `flask manage run {script.py}`, a developer is able to run arbitrary Python code whilst also having the application context available to interact with the data layer.
+To expedite the process of parsing data, the CLI also offers the ability to run custom Python scripts to interact with the database. By placing a Python script in the `scripts` directory, and running the command `flask manage run {script.py}`, a developer is able to run arbitrary Python code whilst also having the application context available to interact with the data layer.
 
 In this repo, I've used the `beethoven.py` script to migrate all of the pulled tracks featuring Beethoven, and safely create `Work` and `Performance` entities, as well as sanitize the names of the `Track` entities.
 

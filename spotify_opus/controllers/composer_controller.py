@@ -1,5 +1,6 @@
 import requests
-from flask import Blueprint, render_template, request, abort, redirect, url_for, flash
+from flask import Blueprint, render_template, request, abort, \
+    redirect, url_for, flash
 
 from spotify_opus import db, SPOTIFY_BASE_URL
 from spotify_opus.forms.ComposerForm import ComposerForm
@@ -52,7 +53,8 @@ def submit_new(req_header, user):
     artist_data = response.json()["artists"]["items"]
 
     if len(artist_data) == 0:
-        flash("Composer name does not match the name of a Spotify artist", "danger")
+        flash("Composer name does not match the name of a "
+              "Spotify artist", "danger")
         return redirect(url_for(".get_all"))
 
     artist_data = artist_data[0]
@@ -132,7 +134,7 @@ def complete_update_query(rows_affected: int):
         flash("Server error when updating composer", "danger")
     else:
         db.session.commit()
-        flash(f"Composer successfully updated.", "success")
+        flash("Composer successfully updated.", "success")
 
     return redirect(url_for(".get_all"))
 
@@ -156,7 +158,8 @@ def delete(req_header, user, composer_id):
         db.session.commit()
         flash("Composer successfully deleted.", "success")
     elif composer_with_works:
-        flash("Composer has works associated, cannot delete until works are manually removed.", "danger")
+        flash("Composer has works associated, "
+              "cannot delete until works are manually removed.", "danger")
     else:
         flash("Composer does not exist.", "danger")
 

@@ -4,7 +4,8 @@ from sqlalchemy.orm import joinedload
 from spotify_opus import db
 from spotify_opus.models.Performance import Performance
 from spotify_opus.models.Work import Work
-from spotify_opus.models.viewmodels import CategoryResultVM, SearchItemVM, AlbumVM, TrackVM
+from spotify_opus.models.viewmodels import CategoryResultVM, SearchItemVM, \
+    AlbumVM, TrackVM
 from spotify_opus.services.oauth_service import VerifyUser
 
 performance = Blueprint("performance", __name__)
@@ -31,18 +32,22 @@ def get_by_work(work_id: int, user, req_header):
     for performance in performances:
         album = performance.album
 
-        artist_names = [artist.name for artist in performance.tracks[0].artists]
+        artist_names = [artist.name for artist
+                        in performance.tracks[0].artists]
 
         if len(artist_names) > 1:
             artist_names.remove(work.composer.name)
 
-        vm = SearchItemVM(url=url_for(".playback", performance_id=performance.performance_id, ),
-                          image_url=album.image_url,
-                          primary_label=artist_names[0],
-                          sec_labels=artist_names[1:])
+        vm = SearchItemVM(
+            url=url_for(".playback",
+                        performance_id=performance.performance_id, ),
+            image_url=album.image_url,
+            primary_label=artist_names[0],
+            sec_labels=artist_names[1:])
         container.items.append(vm)
 
-    return render_template("media.jinja2", results=results, navbar=True, user=user)
+    return render_template("media.jinja2",
+                           results=results, navbar=True, user=user)
 
 
 @performance.route("/performances/<int:performance_id>")

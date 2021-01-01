@@ -28,7 +28,7 @@ def extract_data(composer_id: int):
     query_id = composer.artist.artist_id
     url = f"https://api.spotify.com/v1/artists/{query_id}/albums"
     artists: Set[Artist] = set()
-    albums = extract_items(
+    albums: List[Album] = extract_items(
         lambda data: create_album(data, artists), url)
 
     tracks = []
@@ -38,7 +38,8 @@ def extract_data(composer_id: int):
     existing_artists = Artist.query.all()
 
     new_albums = [album for album in albums if album not in existing_albums]
-    new_artists = {artist for artist in artists if artist not in existing_artists}
+    new_artists = {artist for artist in artists
+                   if artist not in existing_artists}
 
     db.session.bulk_save_objects(new_albums)
     db.session.bulk_save_objects(new_artists)
@@ -47,10 +48,10 @@ def extract_data(composer_id: int):
     total_albums = len(albums)
     for item, album in enumerate(albums):
         if item % 20 == 0:
-            print (f"{item}/{total_albums} albums processed")
+            print(f"{item}/{total_albums} albums processed")
 
         formatted_url = url.format(album.album_id)
-        album_tracks = extract_items(
+        album_tracks: List[Track] = extract_items(
             lambda data: create_track(data, artists), formatted_url)
 
         for track in album_tracks:
@@ -89,8 +90,8 @@ def extract_items(create_func: Callable, url: str) -> List[T]:
     return items
 
 
-@VerifyUser
-def get_batch(url: str, create_func, req_header: dict,
+@VerifyUser(admin=True)
+def get_batch(url: str, create_func: Callable, req_header: dict,
               user) -> Tuple[List[Any], Optional[str]]:
     """Returns a batch of items as well as a url string for the next
     retrieval of items. If this was the last page, the second item in
@@ -112,7 +113,8 @@ def create_album(album_data: dict, artists: Set[Artist]) -> Album:
     album.release_date = album_data["release_date"]
 
     album_artists = album_data["artists"]
-    new_artists = {create_artist(album_artist) for album_artist in album_artists}
+    new_artists = {create_artist(album_artist)
+                   for album_artist in album_artists}
     artists.update(new_artists)
 
     precision = album_data["release_date_precision"]
@@ -125,7 +127,7 @@ def create_album(album_data: dict, artists: Set[Artist]) -> Album:
 
 
 def create_track(
-        track_data: dict, artists: Set[Artist] = None) -> Track:
+        track_data: dict, artists: Set[Artist] = set()) -> Track:
     """Processes a raw Spotify track object and converts
     it to a native ORM model. It will also append any artists
     found if a set is provided."""
@@ -138,11 +140,12 @@ def create_track(
     track.disc_no = track_data["disc_number"]
     track.explicit = track_data["explicit"]
     artist_ids = [a["id"] for a in track_data["artists"]]
-    track.artists = [artist for artist in artists if artist.artist_id in artist_ids]
+    track.artists = [artist for artist in artists
+                     if artist.artist_id in artist_ids]
     return track
 
 
-def create_artist(artist_data: str) -> Artist:
+def create_artist(artist_data: dict) -> Artist:
     artist = Artist()
     artist.name = artist_data["name"]
     artist.artist_id = artist_data["id"]

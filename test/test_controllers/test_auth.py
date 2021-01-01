@@ -16,7 +16,8 @@ class TestAuth(OAuthTestBase):
             elif method == "POST":
                 return client.post(path)
             else:
-                raise ValueError("Incorrect method supplied to request page method")
+                raise ValueError(
+                    "Incorrect method supplied to request page method")
 
         if admin:
             token = self.admin_token
@@ -25,7 +26,7 @@ class TestAuth(OAuthTestBase):
 
         response = self.client.get(path)
         self.assertEqual(response.status_code, 302,
-                          "No token redirects user.")
+                         "No token redirects user.")
 
         response = self.run_with_token(func, token)
         self.assertNotEqual(response.status_code, 302,
@@ -40,5 +41,3 @@ class TestAuth(OAuthTestBase):
     def test_create_composer(self):
 
         self.request_page("GET", url_for("composer.create_new"), True)
-
-

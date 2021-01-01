@@ -25,9 +25,8 @@ class Composer(db.Model):
 
     artist = db.relationship(Artist, backref="composer", uselist=False)
 
-    death_after = db.CheckConstraint("birth_year < death_year", name="death_after")
-
-
+    death_after = db.CheckConstraint(
+        "birth_year < death_year", name="death_after")
 
     def __repr__(self):
         return f"<Composer: {self.name}>"

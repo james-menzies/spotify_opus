@@ -25,7 +25,8 @@ class Track(db.Model):
                               backref="tracks", lazy="joined")
 
     performance_id = db.Column(
-        db.Integer, db.ForeignKey("performances.performance_id"), nullable=True)
+        db.Integer, db.ForeignKey(
+            "performances.performance_id"), nullable=True)
 
     def __repr__(self):
         return f"<Track: {self.name}>"

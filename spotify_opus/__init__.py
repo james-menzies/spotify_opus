@@ -22,7 +22,7 @@ def create_app() -> Flask:
     migrate.init_app(app, db, render_as_batch=True)
     csrf.init_app(app)
 
-    from spotify_opus.models import Album
+    from spotify_opus.models import Album  # noqa: F401
 
     from spotify_opus.manage import manage_commands
     app.register_blueprint(manage_commands)

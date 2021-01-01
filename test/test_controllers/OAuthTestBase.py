@@ -37,8 +37,6 @@ class OAuthTestBase(unittest.TestCase):
         db.session.add(admin)
         db.session.commit()
 
-
-
     def run_with_token(self, func: Callable[[Client], Response], token: str):
         """
         Will run a callable on a test_client, with a provided token. This

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 
 class AlbumVM:
@@ -12,9 +12,10 @@ class AlbumVM:
 
 class TrackVM:
 
-    def __init__(self, name: str, track_number: int = None, duration: str = "0:00"):
+    def __init__(self, name: str, track_number: Optional[int] = None,
+                 duration: str = "0:00"):
         self.name: str = name
-        self.track_number: int = track_number
+        self.track_number: Optional[int] = track_number
         self.duration = duration
 
     def __repr__(self):
@@ -24,7 +25,8 @@ class TrackVM:
 class SearchItemVM:
 
     def __init__(self, url: str, image_url: str,
-                 primary_label: str = "Result Name", sec_labels: List[str] = None):
+                 primary_label: str = "Result Name",
+                 sec_labels: List[str] = None):
         self.url = url
         self.image_url = image_url
         self.primary_label = primary_label

@@ -34,7 +34,7 @@ def delete_db():
 @manage_commands.cli.command("pull")
 @click.argument('composer_id')
 def pull_external_data(composer_id):
-    from spotify_opus.services.data_extraction import extract_data
+    from scripts.data_extraction import extract_data
 
     try:
         composer_id = int(composer_id)
@@ -51,5 +51,4 @@ def generate_works(module):
     Will run a specific script located in the scripts folder. This is mainly
     a pass through method to provide an application context for the script.
     """
-    importlib.import_module(f"spotify_opus.services.scripts.{module}")
-
+    importlib.import_module(f"scripts.{module}")

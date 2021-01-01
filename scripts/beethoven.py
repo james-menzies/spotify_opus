@@ -14,21 +14,21 @@ from spotify_opus.models.Work import Work
 
 class Generator:
     opus_ids = (
-        re.compile("Op.\s?[\d]+[a-l]?( No.\s?[\d]+)?"),
-        re.compile("WoO\s?[\d]+[a-l]?( No.\s?[\d]+)?")
+        re.compile(r"Op.\s?[\d]+[a-l]?( No.\s?[\d]+)?"),
+        re.compile(r"WoO\s?[\d]+[a-l]?( No.\s?[\d]+)?")
     )
-    unspaced_woo = re.compile("WoO\d+")
+    unspaced_woo = re.compile(r"WoO\d+")
 
-    roman_num = re.compile("[MDCLXVI]+\..+")
+    roman_num = re.compile(r"[MDCLXVI]+\..+")
 
     spaced_elements = (
-        re.compile("Op.[\s]+"),
-        re.compile("No.[\s]+")
+        re.compile(r"Op.[\s]+"),
+        re.compile(r"No.[\s]+")
     )
 
-    work_sep = re.compile(", :")
+    work_sep = re.compile(r", :")
 
-    prefix = re.compile("Beethoven: ")
+    prefix = re.compile(r"Beethoven: ")
 
     def __init__(self):
         query = db.session.query(Composer)
