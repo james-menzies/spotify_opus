@@ -15,6 +15,12 @@ data = Blueprint("data", __name__, url_prefix="/data")
 success = "Data successfully backed up to server."
 error = "Error in backing up data to server."
 
+@data.before_app_first_request
+def ensure_backup_dir():
+
+    path = Path.cwd().joinpath("backup")
+    path.mkdir(parents=True, exist_ok=True)
+
 
 @data.route("/")
 @VerifyUser(admin=True)
@@ -54,6 +60,7 @@ def create_backup_archive():
             csv.writer(file).writerows(result)
 
     stamp = datetime.now().timestamp()
+
 
     with zipfile.ZipFile(f"backup/backup_{stamp}.zip", "w") as zfile:
         for dirname, subfolders, filenames in os.walk(dir):
