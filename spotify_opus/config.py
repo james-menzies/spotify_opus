@@ -15,7 +15,6 @@ def get_from_env(var_name: str) -> str:
 
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = "BANANA"
     PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
 
     echo = int(os.environ.get("SHOW_SQL"))  # type: ignore
@@ -54,6 +53,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    SECRET_KEY = "BANANA"
 
     logging.basicConfig(level=logging.INFO)
 
@@ -68,6 +68,7 @@ class ProductionConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+    SECRET_KEY = "BANANA"
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
 
 

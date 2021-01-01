@@ -51,7 +51,7 @@ def submit_new(req_header, user):
     artist_data = response.json()["artists"]["items"]
 
     if len(artist_data) == 0:
-        flash("No results match against Spotify's records", "danger")
+        flash("Composer name does not match the name of a Spotify artist", "danger")
         return redirect(url_for(".get_all"))
 
     artist_data = artist_data[0]
