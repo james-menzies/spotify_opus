@@ -9,7 +9,7 @@ auth = Blueprint("auth", __name__, url_prefix="/auth")
 
 @auth.route("/login")
 def log_in():
-    return render_template("login.html")
+    return render_template("login.jinja2")
 
 
 @auth.route("/login", methods=["POST"])

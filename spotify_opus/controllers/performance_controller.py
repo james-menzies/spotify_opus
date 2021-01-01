@@ -42,7 +42,7 @@ def get_by_work(work_id: int, user, req_header):
                           sec_labels=artist_names[1:])
         container.items.append(vm)
 
-    return render_template("media.html", results=results, navbar=True, user=user)
+    return render_template("media.jinja2", results=results, navbar=True, user=user)
 
 
 @performance.route("/performances/<int:performance_id>")
@@ -67,4 +67,4 @@ def playback(performance_id: int, user, req_header):
         track_vm = TrackVM(track.sanitized_name, duration=final_duration)
         vm.tracks.append(track_vm)
 
-    return render_template("album.html", album=vm)
+    return render_template("album.jinja2", album=vm)

@@ -15,7 +15,7 @@ composer = Blueprint("composer", __name__)
 @VerifyUser()
 def get_all(req_header, user, success=None):
     composers = db.session.query(Composer).all()
-    return render_template('composer.html', composers=composers,
+    return render_template('composer.jinja2', composers=composers,
                            navbar=True, user=user, success=success)
 
 
@@ -24,7 +24,7 @@ def get_all(req_header, user, success=None):
 def create_new(req_header, user):
     form = ComposerForm()
     submit_url = url_for(".submit_new")
-    return render_template('composer_edit.html',
+    return render_template('composer_edit.jinja2',
                            form=form, submit_url=submit_url,
                            navbar=True, user=user)
 
@@ -99,7 +99,7 @@ def edit(req_header, user, composer_id: int):
     submit_url = url_for(".confirm_edit", composer_id=composer_id)
     delete_url = url_for(".delete", composer_id=composer_id)
 
-    return render_template("composer_edit.html",
+    return render_template("composer_edit.jinja2",
                            form=form, navbar=True,
                            submit_url=submit_url, delete_url=delete_url,
                            user=user)

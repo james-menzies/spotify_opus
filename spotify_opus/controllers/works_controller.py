@@ -41,6 +41,6 @@ def get_all(composer_id: int, user, req_header):
     pagination = Pagination(page=page, total=count, per_page=per_page,
                             css_framework='bootstrap4')
 
-    return render_template("works.html", works=works,
+    return render_template("works.jinja2", works=works,
                            navbar=True, user=user,
                            composer=composer.name, pagination=pagination)
