@@ -4,7 +4,9 @@ I would highly recommend reading the [case study](docs/A%20Case%20Study%20on%20S
 
 ## Installation for Local Development
 
-In order to use this repository locally, you will need a .env file with the relevant client secrets in order to use this code base. Please email me for a copy, unfortunately I cannot store this information publically for security reasons.
+In order to use this repository locally, you will need a .env file with the relevant client secrets in order to use this code base. Please email me for a copy.
+
+Unfortunately I cannot store this information publically for security reasons.
 
 Similarly, a populated database can be added on request, however note that **_the user must be using a Postgres database_**.
 
@@ -15,10 +17,13 @@ Similarly, a populated database can be added on request, however note that **_th
 ```
 DB_URI='postgres+psycopg2://user:password@localhost/dbname'
 ```
-5. (If prepopulating) Prepopulate the database with the provided .sql file by executing:
+5. Run the following command, referencing the supplied .sql file:
 ```
-psql {dbname} < path/to/sqlfile
+psql -d {dbname} -f data.sql
 ```
+
+> Note that you may need to add `C:\Program Files\PostgreSQL\{version_no}\bin` to the PATH environment variable if running on Windows.
+
 If not prepopulating, run the following command instead:
 ```
 flask manage reset
