@@ -120,7 +120,7 @@ def confirm_edit(req_header, user, composer_id):
     query = db.session.query(Composer)
     query = query.filter_by(composer_id=composer_id)
     rows_affected = query.update(data)
-    return complete_update_query(rows_affected, "updated")
+    return complete_update_query(rows_affected)
 
 
 def complete_update_query(rows_affected: int):

@@ -3,6 +3,7 @@
 {% block content %}
 <div class="container">
     <form action="{{ submit_url }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{  csrf_token()  }}">
         <div class="form-group p-3 m-auto" style="max-width: 450px;">
         {% for field in form %}
             <div class="p-2">

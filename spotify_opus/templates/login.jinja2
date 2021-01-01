@@ -5,6 +5,7 @@
         <p class="card-text">Login to Spotify Opus to begin demo</p>
 
         <form action="" method="post">
+            <input type="hidden" name="csrf_token" value="{{  csrf_token()  }}">
             <button type="submit" class="btn btn-primary">Begin</button>
         </form>
     </div>

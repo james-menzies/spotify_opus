@@ -10,3 +10,4 @@ tokens/
 *.json
 *.sql
 backup
+temp/

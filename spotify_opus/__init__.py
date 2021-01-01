@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import CSRFProtect
 from marshmallow import ValidationError
 
 SPOTIFY_BASE_URL = "https://api.spotify.com"
@@ -9,6 +10,7 @@ SPOTIFY_BASE_URL = "https://api.spotify.com"
 load_dotenv()
 db: SQLAlchemy = SQLAlchemy()
 migrate: Migrate = Migrate(directory="spotify_opus/migrations")
+csrf: CSRFProtect = CSRFProtect()
 
 
 def create_app() -> Flask:
@@ -18,6 +20,7 @@ def create_app() -> Flask:
 
     db.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)
+    csrf.init_app(app)
 
     from spotify_opus.models import Album
 
