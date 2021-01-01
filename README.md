@@ -29,7 +29,7 @@ If not prepopulating, run the following command instead:
 flask manage reset
 ```
 
-6. Run the app by executing:
+6. Run the app by executing from the root of the project directory:
 ```
 flask run
 ```
