@@ -17,7 +17,7 @@ Similarly, a populated database can be added on request, however note that **_th
 ```
 DB_URI='postgres+psycopg2://user:password@localhost/dbname'
 ```
-5. Run the following command, referencing the supplied .sql file:
+5. Create a new PostgresQL database, and then run the following command, referencing the supplied .sql file:
 ```
 psql -d {dbname} -f data.sql
 ```
@@ -35,6 +35,8 @@ flask run
 ```
 
 7. The local server should be available at `http://localhost:5000/`
+
+8. To log on as an administrator, use the credentials provided in the supplementary files.
 
 ## The Data Structure
 
