@@ -55,7 +55,7 @@ def playback(performance_id: int, user, req_header):
 
     performance = query.get(performance_id)
 
-    vm = AlbumVM(performance.album.name)
+    vm = AlbumVM(f"{performance.work.composer.name}: {performance.work.name}")
     vm.image_url = performance.album.image_url
     vm.artists = [artist.name for artist in performance.tracks[0].artists]
 
@@ -67,4 +67,4 @@ def playback(performance_id: int, user, req_header):
         track_vm = TrackVM(track.sanitized_name, duration=final_duration)
         vm.tracks.append(track_vm)
 
-    return render_template("album.jinja2", album=vm)
+    return render_template("album.jinja2", album=vm, navbar=True, user=user)
