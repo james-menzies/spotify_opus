@@ -4,20 +4,23 @@ I would highly recommend reading the [case study](docs/A%20Case%20Study%20on%20S
 
 ## Installation for Local Development
 
-In order to use this repository locally, you will need a .env file with the relevant client secrets in order to use this code base. Please email me for a copy.
+In order to use this repository locally, you will need a .env file with the relevant application secrets in order to use this code base.
 
-Unfortunately I cannot store this information publically for security reasons.
+Please get in touch for a copy.
 
-Similarly, a populated database can be added on request, however note that **_the user must be using a Postgres database_**.
+A prepopulated database can also be provided, with a preconfigured administrator account, on request as well (PostrgresQL database required).
+
+
+### Steps
 
 1. Clone the repository locally.
-2. Install a database on your local system if not present. I would recommend PostgresQL if wanting to pre-populate the database.
+2. Install a database system on your local machine if not present. PostgresQL must be used if wanting to pre-populate the database.
 3. Place the provided .env file in the root of the directory.
-4. Set the DB_URI in the .env file so that the application can link to the database. For example:
+4. Create a new database, and then set the DB_URI in the .env file so that the application can link to the database. For example:
 ```
 DB_URI='postgres+psycopg2://user:password@localhost/dbname'
 ```
-5. Create a new PostgresQL database, and then run the following command, referencing the supplied .sql file:
+5. To populate a PostgresQL database, run the following command, referencing the supplied .sql file:
 ```
 psql -d {dbname} -f data.sql
 ```
@@ -29,14 +32,19 @@ If not prepopulating, run the following command instead:
 flask manage reset
 ```
 
-6. Run the app by executing from the root of the project directory:
+6. Set up and configure a virtual environment, and then run the following command:
+```
+pip install -r requirments.txt
+```
+
+7. Run the app by executing from the root of the project directory:
 ```
 flask run
 ```
 
-7. The local server should be available at `http://localhost:5000/`
+8. The local server should be available at `http://localhost:5000/`
 
-8. To log on as an administrator, use the credentials provided in the supplementary files.
+9. To log on as an administrator, use the credentials provided in the supplementary files.
 
 ## The Data Structure
 
