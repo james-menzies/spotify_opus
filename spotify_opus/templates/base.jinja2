@@ -15,7 +15,9 @@
         <a href="{{ url_for('composer.get_all') }}">
             <span class="mx-4">Back to Start</span>
         </a>
+        {%  if user.admin %}
         <a href="{{ url_for('data.backup') }}">Back Up Data</a>
+        {% endif %}
         <a href="{{ url_for('auth.log_out') }}" class="mx-4">Log out</a>
     </div>
 
