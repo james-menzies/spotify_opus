@@ -63,8 +63,15 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    pass
+    DEBUG = False
 
+    @property
+    def SQLALCHEMY_DATABASE_URI(self):
+        return get_from_env("DB_URI")
+
+    @property
+    def SECRET_KEY(self):
+        return get_from_env("SECRET_KEY")
 
 class TestingConfig(Config):
     TESTING = True
